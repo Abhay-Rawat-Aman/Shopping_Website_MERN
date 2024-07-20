@@ -8,7 +8,6 @@ const connectdatabase = () => {
         console.log(`Database connection error: ${err.message}`);
         process.exit(1);
     })
-
 }
 
 

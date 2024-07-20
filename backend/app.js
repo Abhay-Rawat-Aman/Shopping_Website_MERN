@@ -1,7 +1,9 @@
 const express = require("express");
+const cookieParser = require('cookie-parser');
 const app = express();
 const path = require('path');
 const cors = require('cors');
+
 
 if(process.env.NOD_ENV!="PRODUCTION"){
     require('dotenv').config({path:"./config/config.env"})
@@ -10,12 +12,22 @@ if(process.env.NOD_ENV!="PRODUCTION"){
 
 
 app.use(cors());
+
 app.use(express.json());
+app.use(cookieParser());
 
 //Route Import
 const user = require('./routes/userRoutes');
 
 app.use("/api",user);
+
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(err.statusCode || 500).json({
+        success: false,
+        message: err.message || "Internal server error"
+    });
+});
 
 if(process.env.NOD_ENV==="PRODUCTION"){
     app.use(express.static(path.join(__dirname,"../build")));
