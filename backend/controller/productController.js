@@ -5,23 +5,13 @@ const ApiResponse = require('../utils/ApiResponse');
 module.exports = {
     createProduct: async (req, res) => {
         try {
-            
-            const {
-                categoryId,
-                brandId,
-                name,
-                description,
-                price,
-                mainImage,
-                variations
-            } = req.body;
 
-            
+            const { categoryId, brandId, name, description, price, mainImage, variations } = req.body;
             if (!Array.isArray(variations)) {
                 throw new ApiErrorHandler(400, "Variations must be an array");
             }
 
-            
+
             const product = new Product({
                 categoryId,
                 brandId,
