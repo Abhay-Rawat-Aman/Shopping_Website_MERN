@@ -64,10 +64,10 @@ exports.registerUser = async (req, res) => {
 
 exports.fetchUser = async (req, res) => {
     try {
-        const { fname, lname, email, password } = req.body
+        const { fname, email, password  , lname} = req.body
 
-        if (!(fname || lname || email)) {
-            throw new ApiErrorHandler("400", "Fname or email required")
+        if (!(email)) {
+            throw new ApiErrorHandler("400", "email required")
         }
 
 
@@ -101,7 +101,7 @@ exports.fetchUser = async (req, res) => {
             new ApiResponse(
                 200, 
                 {
-                    user : loggedInUser , accessToken , refreshToken
+                    user: { ...loggedInUser.toObject(), accessToken, refreshToken, name: user.fname }
                 },
                 "User Loged in successfully"
             )

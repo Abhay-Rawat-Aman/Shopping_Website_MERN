@@ -3,12 +3,12 @@ const { Schema } = mongoose;
 
 
 const variationTypeSchema = new Schema({
-    _id: { type: Number, required: true },
+    variation_id: { type: Number, required: true },
     type: { type: String, required: true }
 });
 
 const variationValueSchema = new Schema({
-    _id: { type: Number, required: true },
+
     variation_type_id: { type: Number, required: true, ref: 'VariationType' },
     value: { type: String, required: true }
 });

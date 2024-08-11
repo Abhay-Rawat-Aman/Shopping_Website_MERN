@@ -1,0 +1,663 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+
+.roboto-regular {
+    font-family: "Roboto" !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+}
+
+::-webkit-scrollbar {
+    width: 10px !important;
+    height: 7px !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #9a9a9a !important;
+    border-radius: 10px !important;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f0f5ff !important;
+    border-radius: 10px !important;
+}
+
+body {
+    background-color: #e0e7ff;
+    transition: all .2s ease-in-out !important;
+    scroll-behavior: smooth !important;
+}
+
+.btn-border {
+    border: 1px solid rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-color {
+    background-color: #3872fa;
+}
+
+.btn-rounded {
+    border-radius: 50px !important;
+}
+
+.btn-color:hover {
+    background-color: #1d58d8;
+}
+
+.btn-border:hover {
+    border: 1px solid rgba(0, 0, 0, 0.6) !important;
+}
+
+.main {
+    display: flex;
+}
+
+.main .sidebarWrapper {
+    height: 100vh;
+}
+
+.main .sidebarWrapper .sidebar {
+    height: 100vh;
+    color: white;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs ul {
+    padding: 0;
+    width: 100%;
+    margin-bottom: 0px;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs li {
+    list-style: none;
+    width: 100%;
+    position: relative;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs li .submenuWrapper {
+    transition: all .4s;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs li .submenuWrapper.colapsed .submenu {
+    opacity: 0;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs li .submenuWrapper.colapse {
+    height: auto;
+    overflow: hidden;
+    opacity: 1;
+    padding: 10px 1px;
+}
+
+
+.main .sidebarWrapper .sidebar .sidebarTabs li .submenuWrapper.colapse .submenu {
+    opacity: 1;
+    height: auto;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs li .submenu button::before {
+    display: none;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs li .submenu button::after {
+    content: "";
+    width: 5px;
+    height: 5px;
+    background: #9f9f9f;
+    border-radius: 100%;
+    position: absolute;
+    top: 47%;
+    left: 10%;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs li .submenu button {
+    padding: 10px 25px 4px 45px !important;
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    justify-content: flex-start !important;
+    color: rgba(0, 0, 0, 0.5);
+    transition: .3s all !important;
+
+}
+
+
+
+.main .sidebarWrapper .sidebar .sidebarTabs button {
+    padding: 5px 10px;
+    justify-content: flex-start !important;
+    color: #5e5d72;
+    text-transform: capitalize;
+    font-size: larger !important;
+    font-weight: 800 !important;
+    position: relative;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs button::before {
+    content: "";
+    width: 4px !important;
+    height: 0%;
+    position: absolute;
+    top: 50%;
+    left: -18px;
+    background: #3872fa;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    transition: 0.3s all ease-in !important;
+    opacity: 0;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs button:hover::before,
+.main .sidebarWrapper .sidebar .sidebarTabs button.active::before {
+    top: 0;
+    height: 100%;
+    opacity: 1;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs button.active,
+.main .sidebarWrapper .sidebar .sidebarTabs button.active * {
+
+    color: #709afe;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs button:hover {
+    background-color: #c5c4c4;
+    border-radius: 12px;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs button svg {
+    font-size: 25px !important;
+    font-weight: 800 !important;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs button svg.arrow-open {
+    transform: rotate(90deg) !important;
+    transition: all .3s ease-in !important;
+}
+
+.main .sidebarWrapper .sidebar .sidebarTabs button svg.arrow-close {
+    transform: rotate(0deg) !important;
+    transition: all .3s ease-in !important;
+}
+
+.content_Right {
+    padding: 1rem 1.8rem !important;
+}
+
+header {
+    height: 75px;
+    width: 82%;
+}
+
+header .part2 button {
+    min-width: 40px !important;
+    height: 40px !important;
+    width: 40px !important;
+    border-radius: 100% !important;
+    background-color: #f0f5ff;
+    color: #000;
+}
+
+header .part2 button svg {
+    font-size: 20px;
+    color: #292929;
+}
+
+.searchBox input[type="text"]:focus {
+    border-color: #709afe;
+}
+
+.searchBox {
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.searchBox:hover {
+    border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+.searchBox input {
+    outline: none !important;
+    font-size: 14px;
+}
+
+
+
+div.myAcc button {
+    height: auto !important;
+    width: auto !important;
+    min-width: auto !important;
+}
+
+.userImage {
+    width: 3rem;
+    height: 3rem;
+}
+
+.userImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: transform 0.3s ease-in-out;
+}
+
+.userImage:hover img {
+    transform: scale(1.1);
+}
+
+.invisible {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.2s linear;
+}
+
+.visible {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s, opacity 0.2s linear;
+}
+
+.displayNone {
+    display: none;
+}
+
+.icon {
+    margin-right: 20px !important;
+}
+
+.table th {
+    font-size: 16px;
+    font-weight: 700;
+    color: #4d4d4d !important;
+}
+
+table tbody tr {
+    height: 90px;
+}
+
+table td, table th {
+    vertical-align: middle;
+}
+
+.card tr th:first-child, .card tr td:first-child {
+    padding-left: 25px;
+}
+
+.card tr th:last-child {
+    padding-right: 25px;
+}
+
+table td .info h6 {
+    margin-bottom: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 15px !important;
+    font-weight: 600;
+}
+
+h1, h2, h3, h4, h5, h6 p {
+    color: #403e57 !important;
+}
+
+table td .new, table td .old {
+    display: block;
+    width: 100%;
+    font-size: 15px;
+}
+
+table td .imageWrapper {
+    margin-right: 12px;
+}
+
+.action button {
+    border: 1px solid rgba(0, 0, 0, 0.23);
+}
+
+.action button svg {
+    color: inherit;
+    opacity: 0.7;
+}
+
+.action button:hover svg {
+    opacity: 1;
+    transition: all 0.3 cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.action button:hover {
+    border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.productWrapper {
+    padding: 0 20px;
+}
+
+.MuiBreadcrumbs-li a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+
+.activePage {
+    color: #5e5d72 !important;
+}
+
+
+.breadcrumbWrapper {
+    width: 100%;
+    height: auto;
+    padding: 20px 0px;
+}
+
+.detailsPage .ProductInfo {
+    padding-left: 50px;
+}
+
+.detailsPage .ProductInfo h1 {
+    font-size: 50px !important;
+    opacity: .8;
+    font-weight: 800;
+}
+
+.detailsPage .ProductInfo .priceSec .priceLarge {
+    font-size: 40px !important;
+    font-weight: 400;
+}
+
+.detailsPage .ProductInfo .priceSec .text-org {
+    font-size: 16px !important;
+}
+
+.detailsPage .ProductInfo .priceSec .oldPrice {
+    font-size: 22px !important;
+}
+
+.ProductZoom {
+    width: 100%;
+    height: auto;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    padding: 0px;
+    overflow: hidden;
+    border-radius: 22px;
+}
+
+.zoomSlider {
+    padding-top: 20px;
+}
+
+.zoomSlider * {
+    outline: none !important;
+}
+
+.zoomSlider .slick-slide {
+    padding-right: 20px !important;
+}
+
+.zoomSlider .slick-slide {
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.zoomSlider .slick-slide .item {
+    margin-right: 20px !important;
+}
+
+.zoomSlider .slick-current img {
+    border: 1px solid #3bb77e;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.zoomSlider .slick-arrow {
+    zoom: 80%;
+}
+
+.zoomSlider .slick-arrow.slick-next {
+    right: -14px !important;
+}
+
+.zoomSlider .slick-arrow.slick-prev {
+    left: -40px !important;
+}
+
+.detailsContainer {
+    max-width: 85%;
+}
+
+.productSize {
+    width: 100%;
+    height: auto;
+    padding: 25px 0px;
+}
+
+.productSize ul {
+    margin-left: 10px;
+    margin-bottom: 0px;
+}
+
+.productSize ul li {
+    margin-right: 15px !important;
+}
+
+.productSize ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 15px !important;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+    font-size: 12px;
+    transition: all .3s ease-in-out;
+}
+
+.productSize ul li a.active {
+    background-color: #3bb77e;
+    color: #fff;
+}
+
+.addCartSection {
+    width: 100%;
+    height: auto;
+}
+
+.addCartSection .counterSec {
+    width: 112px;
+    height: 56px;
+    border: 1px solid rgba(0, 0, 0, 0.53) !important;
+    border-radius: 19px;
+    overflow: hidden;
+    padding: 12px;
+    margin-right: 13px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+
+input[type=numberr] {
+    -moz-appearance: none;
+}
+
+.addCartSection .counterSec input {
+    width: 60px;
+    height: 37px;
+    padding-inline-start: 5px;
+    border: 0;
+    outline: none;
+}
+
+.addCartSection .counterSec {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.addCartSection .counterSec .arrow {
+    position: absolute;
+    cursor: pointer;
+    opacity: .5;
+}
+
+.addCartSection .counterSec .arrow.plus {
+    top: 5px;
+    right: 10px;
+}
+
+.addCartSection .counterSec .arrow.minus {
+    bottom: 5px;
+    right: 10px;
+}
+
+.addToCartBtn {
+    text-transform: capitalize !important;
+    margin-right: 10px !important;
+}
+
+.addToCartBtn svg {
+    font-size: 28px !important;
+    margin-right: 4px;
+}
+
+.likeBtn {
+    margin-right: 10px !important;
+}
+
+.addCartSection button {
+    height: 50px;
+    min-width: inherit;
+    transition: all .35s ease-in-out;
+}
+
+.addCartSection button svg {
+    font-size: 28px !important;
+}
+
+.addCartSection button .move {
+    position: relative;
+}
+
+.addCartSection button:hover {
+    transform: translateY(-5px);
+}
+
+.detailsPageTab {
+    border-radius: 25px;
+}
+
+.customTabs ul li {
+    margin-right: 13px !important;
+}
+
+.customTabs ul li button.active {
+    background-color: #3bb77e;
+    color: #fff;
+}
+
+.customTabs ul li button {
+    padding: 10px 25px !important;
+    border: 1px solid rgba(0, 0, 0, .9);
+    font-size: 13px !important;
+    text-transform: capitalize !important;
+    border-radius: 30px;
+    color: #000;
+}
+
+.card {
+    border-radius: 10px !important;
+}
+
+.reviewCard {
+    margin-bottom: 12px;
+}
+
+
+.reviewCard .image {
+    width: 100px;
+}
+
+.reviewCard .rounded-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    height: 100px;
+    width: 100px;
+}
+
+.reviewCard .rounded-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.progressBarBox {
+    margin-bottom: 12px;
+}
+
+.relatedProducts .item {
+    margin-top: 15px;
+    padding: 20px 10px;
+    padding-right: 20px !important;
+}
+
+.header .logo {
+    padding: 25px 3% !important;
+}
+
+.header svg {
+    font-size: 16px !important;
+}
+
+.container {
+    width: max-content !important;
+}
+
+.signUpPage {
+    padding: 35px 0;
+}
+
+.signUpPage h1 {
+    padding: 35px 0;
+    color: #000 !important;
+}
+
+.socialBtn button {
+    color: #494944;
+    font-size: 15px !important;
+    text-transform: capitalize;
+    font-weight: 700;
+    border: 1px solid rgba(0, 0, 0, 0.26);
+    border-radius: 10px;
+}
+
+.socialBtn button svg {
+    font-size: 20px;
+    margin-right: 6px;
+}
+
+.socialBtn button:hover {
+    border: 1px solid #3872fa !important;
+}
+
+.socialBtn button:hover * {
+    color: #3872fa !important;
+}
+
+.submitBtn{
+    background-color: #111 !important;
+}
