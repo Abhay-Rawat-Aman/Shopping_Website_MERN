@@ -1,4 +1,4 @@
-import React, { PureComponent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardCard from "../../components/DashboardCard/DashboardCard";
 import Rating from "@mui/material/Rating";
 import {
@@ -20,25 +20,36 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import { getAllProduct } from "../../Api/authApi";
 
 const Dashboard = () => {
-
-  const [page, setPerPage] =useState("");
+  const [page, setPerPage] = useState(5);
+  const [products, setProducts] = useState([]);
 
   const handleChange = (event) => {
     setPerPage(event.target.value);
   };
 
-  
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getAllProduct();
+        setProducts(data); 
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+    console.log(products);
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-
   return (
     <div className=" min-h-screen pl-[2rem] pr-[0]">
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <DashboardCard
           title="Total Users"
@@ -109,345 +120,80 @@ const Dashboard = () => {
             </thead>
 
             <tbody className="table-group-divider ">
-              <tr>
-                <td>1</td>
-                <td>
-                  <div className="flex items-center gap-2 w-[300px] justify-center  productWrapper productWrapper">
-                    <div className="imageWrapper shadow overflow-hidden w-[20%] h-[20%] lg">
-                      <img
-                        src="https://react-demo.tailadmin.com/assets/product-01-c483c307.png"
-                        alt="image"
-                        className="w-full h-full"
+              {products.length > 0 ? (
+                products.map((product, index) => (
+                  <tr key={product._id}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <div className="flex items-center gap-2 w-[300px] justify-center productWrapper">
+                        <div className="imageWrapper shadow overflow-hidden w-[20%] h-[20%] rounded-lg">
+                          <img
+                            src={product.image}
+                            alt="product"
+                            className="w-full h-full"
+                          />
+                        </div>
+                        <div className="info w-[75%]">
+                          <h6>{product.name}</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{product.subCategory}</td>
+                    <td>{product.brandId}</td>
+                    <td>
+                      <div className="w-[70px]">
+                        <del className="old">${product.oldPrice}</del>
+                        <span className="new text-danger">
+                          Rs.{product.newPrice}
+                        </span>
+                      </div>
+                    </td>
+                    <td>{product.stock}</td>
+                    <td>
+                      <Rating
+                        name="read-only"
+                        defaultValue={product.rating}
+                        precision={0.5}
+                        readOnly
+                        size="small"
                       />
-                    </div>
-
-                    <div className="info w-[75%]">
-                      <h6>Apple Watch Series 7 </h6>
-                    </div>
-                  </div>
-                </td>
-                <td>Women</td>
-                <td>Richmen</td>
-                <td>
-                  <div className="w-[70px]">
-                    <del className="old">$21.00</del>
-                    <span className="new text-danger"> $25.00 </span>
-                  </div>
-                </td>
-                <td>
-                  <Rating
-                    name="read-only"
-                    defaultValue={2.5}
-                    precision={0.5}
-                    readOnly
-                    size="small"
-                  />
-                </td>
-                <td>350</td>
-                <td>$35k</td>
-                <td>
-                  <div className="action flex items-center gap-2">
-                    <Tooltip title="Add" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <MdOutlineModeEdit />
-                      </button>
-                    </Tooltip>
-
-                    <Tooltip title="View" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <FaRegEye />
-                      </button>
-                    </Tooltip>
-
-                    <Tooltip title="Delete" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <MdDeleteOutline />
-                      </button>
-                    </Tooltip>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>1</td>
-                <td>
-                  <div className="flex items-center gap-2 w-[300px] justify-center  productWrapper">
-                    <div className="imageWrapper shadow overflow-hidden w-[20%] h-[20%] rounded-lg">
-                      <img
-                        src="https://react-demo.tailadmin.com/assets/product-04-89ad00c9.png"
-                        alt="image"
-                        className="w-full h-full"
-                      />
-                    </div>
-
-                    <div className="info w-[75%]">
-                      <h6>Apple Watch Series 7 </h6>
-                    </div>
-                  </div>
-                </td>
-                <td>Women</td>
-                <td>Richmen</td>
-                <td>
-                  <div className="w-[70px]">
-                    <del className="old">$21.00</del>
-                    <span className="new text-danger"> $25.00 </span>
-                  </div>
-                </td>
-                <td>
-                  <Rating
-                    name="read-only"
-                    defaultValue={2.5}
-                    precision={0.5}
-                    readOnly
-                    size="small"
-                  />
-                </td>
-                <td>350</td>
-                <td>$35k</td>
-                <td>
-                  <div className="action flex items-center gap-2">
-                    <Tooltip title="Add" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <MdOutlineModeEdit />
-                      </button>
-                    </Tooltip>
-
-                    <Tooltip title="View" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <FaRegEye />
-                      </button>
-                    </Tooltip>
-
-                    <Tooltip title="Delete" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <MdDeleteOutline />
-                      </button>
-                    </Tooltip>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>1</td>
-                <td>
-                  <div className="flex items-center gap-2 w-[300px] justify-center  productWrapper">
-                    <div className="imageWrapper shadow overflow-hidden w-[20%] h-[20%] rounded-lg">
-                      <img
-                        src="https://react-demo.tailadmin.com/assets/product-03-16b7c2c9.png"
-                        alt="image"
-                        className="w-full h-full"
-                      />
-                    </div>
-
-                    <div className="info w-[75%]">
-                      <h6>Apple Watch Series 7 </h6>
-                    </div>
-                  </div>
-                </td>
-                <td>Women</td>
-                <td>Richmen</td>
-                <td>
-                  <div className="w-[70px]">
-                    <del className="old">$21.00</del>
-                    <span className="new text-danger"> $25.00 </span>
-                  </div>
-                </td>
-                <td>
-                  <Rating
-                    name="read-only"
-                    defaultValue={2.5}
-                    precision={0.5}
-                    readOnly
-                    size="small"
-                  />
-                </td>
-                <td>350</td>
-                <td>$35k</td>
-                <td>
-                  <div className="action flex items-center gap-2">
-                    <Tooltip title="Add" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <MdOutlineModeEdit />
-                      </button>
-                    </Tooltip>
-
-                    <Tooltip title="View" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <FaRegEye />
-                      </button>
-                    </Tooltip>
-
-                    <Tooltip title="Delete" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <MdDeleteOutline />
-                      </button>
-                    </Tooltip>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>1</td>
-                <td>
-                  <div className="flex items-center gap-2 w-[300px] justify-center  productWrapper">
-                    <div className="imageWrapper shadow overflow-hidden w-[20%] h-[20%] rounded-lg">
-                      <img
-                        src="https://react-demo.tailadmin.com/assets/product-02-7399ae73.png"
-                        alt="image"
-                        className="w-full h-full"
-                      />
-                    </div>
-
-                    <div className="info w-[75%]">
-                      <h6>Apple Watch Series 7 </h6>
-                    </div>
-                  </div>
-                </td>
-                <td>Women</td>
-                <td>Richmen</td>
-                <td>
-                  <div className="w-[70px]">
-                    <del className="old">$21.00</del>
-                    <span className="new text-danger"> $25.00 </span>
-                  </div>
-                </td>
-                <td>
-                  <Rating
-                    name="read-only"
-                    defaultValue={2.5}
-                    precision={0.5}
-                    readOnly
-                    size="small"
-                  />
-                </td>
-                <td>350</td>
-                <td>$35k</td>
-                <td>
-                  <div className="action flex items-center gap-2">
-                    <Tooltip title="Add" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <MdOutlineModeEdit />
-                      </button>
-                    </Tooltip>
-
-                    <Tooltip title="View" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <FaRegEye />
-                      </button>
-                    </Tooltip>
-
-                    <Tooltip title="Delete" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <MdDeleteOutline />
-                      </button>
-                    </Tooltip>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>1</td>
-                <td>
-                  <div className="flex items-center gap-2 w-[300px] justify-center  productWrapper">
-                    <div className="imageWrapper shadow overflow-hidden w-[20%] h-[20%] rounded-lg">
-                      <img
-                        src="https://react-demo.tailadmin.com/assets/product-01-c483c307.png"
-                        alt="image"
-                        className="w-full h-full"
-                      />
-                    </div>
-
-                    <div className="info w-[75%]">
-                      <h6>Apple Watch Series 7 </h6>
-                    </div>
-                  </div>
-                </td>
-                <td>Women</td>
-                <td>Richmen</td>
-                <td>
-                  <div className="w-[70px]">
-                    <del className="old">$21.00</del>
-                    <span className="new text-danger"> $25.00 </span>
-                  </div>
-                </td>
-                <td>
-                  <Rating
-                    name="read-only"
-                    defaultValue={2.5}
-                    precision={0.5}
-                    readOnly
-                    size="small"
-                  />
-                </td>
-                <td>350</td>
-                <td>$35k</td>
-                <td>
-                  <div className="action flex items-center gap-2">
-                    <Tooltip title="Add" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <MdOutlineModeEdit />
-                      </button>
-                    </Tooltip>
-
-                    <Tooltip title="View" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <FaRegEye />
-                      </button>
-                    </Tooltip>
-
-                    <Tooltip title="Delete" arrow placement="top">
-                      <button
-                        variant="outlined"
-                        className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
-                      >
-                        <MdDeleteOutline />
-                      </button>
-                    </Tooltip>
-                  </div>
-                </td>
-              </tr>
+                    </td>
+                    <td>${product.sales}</td>
+                    <td>
+                      <div className="action flex items-center gap-2">
+                        <Tooltip title="Add" arrow placement="top">
+                          <button
+                            variant="outlined"
+                            className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
+                          >
+                            <MdOutlineModeEdit />
+                          </button>
+                        </Tooltip>
+                        <Tooltip title="View" arrow placement="top">
+                          <button
+                            variant="outlined"
+                            className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
+                          >
+                            <FaRegEye />
+                          </button>
+                        </Tooltip>
+                        <Tooltip title="Delete" arrow placement="top">
+                          <button
+                            variant="outlined"
+                            className="flex items-center justify-center w-[30px] h-[30px] rounded-full duration-300"
+                          >
+                            <MdDeleteOutline />
+                          </button>
+                        </Tooltip>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9">No products found</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -461,12 +207,9 @@ const Dashboard = () => {
                 labelId="demo-select-small-label"
                 id="demo-select-small"
                 value={page}
-                label="Age"
+                label="Page"
                 onChange={handleChange}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
                 <MenuItem value={15}>15</MenuItem>

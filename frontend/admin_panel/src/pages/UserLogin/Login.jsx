@@ -7,7 +7,7 @@ import { LuArrowRightToLine } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
 import { IoLogoFacebook, IoLogoGoogleplus } from "react-icons/io";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { LoginUser } from "../../Api/authApi";
+import { fetchUsername, LoginUser } from "../../Api/authApi";
 
 const Login = () => {
   const context = useContext(MyContext);
@@ -33,13 +33,29 @@ const Login = () => {
     }));
   };
 
+  // const handleLoginSuccess = async (loginResponse) => {
+  //   try {
+  //     const userId = loginResponse.data.user._id;
+  //     const usernameResponse = await fetchUsername(userId);
+  //     if (usernameResponse.success) {
+  //       const username = usernameResponse.data.userName;
+  //       console.log("Fetched username:", username);
+  //       // context.setUser({
+  //       //   ...loginResponse.data.user,
+  //       //   userName: username,
+  //       // });
+  //     } else {
+  //       console.error("Failed to fetch username");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in fetching username:", error);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !userData.email ||
-      !userData.password
-    ) {
+    if (!userData.email || !userData.password) {
       setError("Please fill in all fields");
       return;
     }
@@ -51,14 +67,15 @@ const Login = () => {
 
     try {
       const response = await LoginUser(userData);
-      if(response.success) {
-        console.log("User Logged in successfully:", response);
+      console.log("User Logged API resp:", response.data);
+      if (response.success ) {
+        // await handleLoginSuccess(response);
+        console.log(response);
         navigate("/");
         context.setisHeaderFooterShown(true);
         context.setIsLogin(true);
-        
         context.setUser({
-          name :response.data.user.fname,
+          email : response.data.email
         });
 
         setUserData({
@@ -98,8 +115,7 @@ const Login = () => {
 
       <div className="container signUpPage mx-auto py-12 px-3">
         <h1 className="rizzui-title-h2 mb-7 text-center text-[30px] font-bold leading-snug md:text-3xl md:!leading-normal lg:mb-10 lg:text-[45px] p-0">
-           Welcome Back! <br /> Sign in with your
-          credentials.
+          Welcome Back! <br /> Sign in with your credentials.
         </h1>
 
         <div className="flex items-center gap-3 mt-4 socialBtn">

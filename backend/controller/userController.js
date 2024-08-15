@@ -64,53 +64,82 @@ exports.registerUser = async (req, res) => {
 
 exports.fetchUser = async (req, res) => {
     try {
-        const { fname, email, password  , lname} = req.body
+        const { fname, email, password } = req.body;
 
-        if (!(email)) {
-            throw new ApiErrorHandler("400", "email required")
+        if (!email) {
+            throw new ApiErrorHandler(400, "Email is required");
         }
 
-
-        const user = await User.findOne({
-            $or: [ { email } , { fname}]
-        })
-
+        const user = await User.findOne({ $or: [{ email }, { fname }] });
 
         if (!user) {
-            throw new ApiErrorHandler("404", "User not found");
+            throw new ApiErrorHandler(404, "User not found");
         }
 
         const isPasswordValid = await user.isPasswordCorrect(password);
 
         if (!isPasswordValid) {
-            throw new ApiErrorHandler("401", " Invalid user credentials");
+            throw new ApiErrorHandler(401, "Invalid user credentials");
         }
 
-
         const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
-
 
         const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
         const options = {
             httpOnly: true,
-            secure: true
-        }
+            secure: true,
+            sameSite: 'Strict',
+        };
 
-        return res.status(200).cookie("access_token", accessToken, options).cookie("refresh_token", refreshToken, options).json(
-            new ApiResponse(
-                200, 
-                {
-                    user: { ...loggedInUser.toObject(), accessToken, refreshToken, name: user.fname }
-                },
-                "User Loged in successfully"
-            )
-        )
+        res.cookie('user_id', loggedInUser._id, { ...options, httpOnly: false });
+        res.cookie('user_fname', loggedInUser.fname, { ...options, httpOnly: false });
+        res.cookie('user_lname', loggedInUser.lname, { ...options, httpOnly: false });
+        res.cookie('user_email', loggedInUser.email, { ...options, httpOnly: false });
+
+        return res.status(200).cookie("access_token", accessToken, options)
+            .cookie("refresh_token", refreshToken, options)
+            .json(new ApiResponse(
+                200,
+                { shouldSetUserData: true },
+                "User logged in successfully"
+            ));
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({
             success: false,
-            message: "Failed to fetch users"
+            message: "Failed to fetch user"
+        });
+    }
+};
+
+
+exports.fetchUsername = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const user = await User.findById(id).select('-password');
+
+        if (!user) {
+            return res.status(404).json({
+                statusCode: 404,
+                data: null,
+                message: "User not found"
+            });
+        }
+
+        return res.status(200).json({
+            statusCode: 200,
+            data: user,
+            message: "User fetched successfully"
+        });
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        return res.status(500).json({
+            statusCode: 500,
+            data: null,
+            message: "Failed to fetch user"
         });
     }
 };

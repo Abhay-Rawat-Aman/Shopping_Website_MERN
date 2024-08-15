@@ -49,12 +49,57 @@ const productSchema = new Schema({
         required: true,
         min: 0
     },
-    mainImage: { type: String },
-    variations: [productVariationSchema],
-
+    oldPrice: {
+        type: Number,
+        required: true
+    },
+    newPrice: {
+        type: Number,
+        required: true
+    },
+    stock: {
+        type: Number,
+        required: true
+    },
+    rating: {
+        type: Number,
+        required: true
+    },
+    sales: {
+        type: String,
+        required: true
+    },
+    image: {
+        type: String,
+        required: true
+    },
+    discount: {
+        type: String
+    },
+    total: {
+        type: String
+    },
+    subCategory: {
+        type: String
+    },
+    weight: {
+        type: String
+    },
+    dimensions: {
+        type: String
+    },
+    colors: {
+        type: String
+    },
+    sizes: {
+        type: String
+    },
+    mainImage: {
+        type: String
+    },
+    variations: [productVariationSchema]
 
 }, { timestamps: true });
-
 
 const Product = mongoose.model('Product', productSchema);
 const VariationType = mongoose.model('VariationType', variationTypeSchema);

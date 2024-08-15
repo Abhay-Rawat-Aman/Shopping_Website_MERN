@@ -21,9 +21,7 @@ const Header = () => {
   const open = Boolean(anchorEl);
   const navigate = useNavigate(); // Initialize navigate
   const context = useContext(MyContext);
-  const userName = context.user?.name || "pawan";
-  console.log(context.user?.name);
-  // alert(context.user?.name);
+  const userName = context.user?.email || "pawan";
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,7 +35,6 @@ const Header = () => {
       await logout(); 
       context.setIsLogin(false); 
       navigate("/login"); 
-      // context.setIsLogin(false); 
     } catch (error) {
       console.error("Logout failed", error); 
     }

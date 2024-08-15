@@ -14,14 +14,13 @@ import ProtectedRoute from "./protected_route.jsx";
 export const MyContext = createContext();
 
 const App = () => {
-  
   const [isLogin, setIsLogin] = useState(() => {
     return localStorage.getItem("isLogin") === "true" || false;
   });
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isHeaderFooterShown, setisHeaderFooterShown] = useState(true);
-  const [user, setUser] = useState({ name: "pawan" });
+  const [user, setUser] = useState(null);
 
   const values = {
     isLogin,
