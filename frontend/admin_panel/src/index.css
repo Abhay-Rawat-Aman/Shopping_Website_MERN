@@ -1,14 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-
-
-.roboto-regular {
-    font-family: "Roboto" !important;
-    font-weight: 400 !important;
-    font-style: normal !important;
-}
 
 ::-webkit-scrollbar {
     width: 10px !important;
@@ -76,6 +68,7 @@ body {
     list-style: none;
     width: 100%;
     position: relative;
+    font-weight: 400;
 }
 
 .main .sidebarWrapper .sidebar .sidebarTabs li .submenuWrapper {
@@ -135,7 +128,7 @@ body {
     color: #5e5d72;
     text-transform: capitalize;
     font-size: larger !important;
-    font-weight: 800 !important;
+    font-weight: 600 !important;
     position: relative;
 }
 

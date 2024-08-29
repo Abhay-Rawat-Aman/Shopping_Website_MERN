@@ -64,13 +64,15 @@ exports.registerUser = async (req, res) => {
 
 exports.fetchUser = async (req, res) => {
     try {
-        const { fname, email, password } = req.body;
+        const { email, password } = req.body;
 
         if (!email) {
             throw new ApiErrorHandler(400, "Email is required");
         }
 
-        const user = await User.findOne({ $or: [{ email }, { fname }] });
+        console.log(email);
+
+        const user = await User.findOne({email});
 
         if (!user) {
             throw new ApiErrorHandler(404, "User not found");
@@ -92,16 +94,18 @@ exports.fetchUser = async (req, res) => {
             sameSite: 'Strict',
         };
 
-        res.cookie('user_id', loggedInUser._id, { ...options, httpOnly: false });
-        res.cookie('user_fname', loggedInUser.fname, { ...options, httpOnly: false });
-        res.cookie('user_lname', loggedInUser.lname, { ...options, httpOnly: false });
-        res.cookie('user_email', loggedInUser.email, { ...options, httpOnly: false });
+        // res.cookie('user_id', loggedInUser._id, { ...options, httpOnly: false });
+        // res.cookie('user_fname', loggedInUser.fname, { ...options, httpOnly: false });
+        // res.cookie('user_lname', loggedInUser.lname, { ...options, httpOnly: false });
+        // res.cookie('user_email', loggedInUser.email, { ...options, httpOnly: false });
+
 
         return res.status(200).cookie("access_token", accessToken, options)
             .cookie("refresh_token", refreshToken, options)
             .json(new ApiResponse(
                 200,
-                { shouldSetUserData: true },
+                {fname: loggedInUser.fname, lname: loggedInUser.lname , email: loggedInUser.email},
+                // {loggedInUser},
                 "User logged in successfully"
             ));
 

@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-
 const variationTypeSchema = new Schema({
-    variation_id: { type: Number, required: true },
+    _id: { type: Number, required: true },
     type: { type: String, required: true }
 });
 
 const variationValueSchema = new Schema({
-
+    _id: { type: Number, required: true },
     variation_type_id: { type: Number, required: true, ref: 'VariationType' },
     value: { type: String, required: true }
 });
@@ -24,14 +23,15 @@ const productVariationSchema = new Schema({
     details: [productVariationDetailsSchema],
 });
 
+
 const productSchema = new Schema({
     categoryId: {
-        type: String,
+        type: Schema.Types.ObjectId,
         required: true,
         ref: 'Category'
     },
     brandId: {
-        type: String,
+        type: Schema.Types.ObjectId,
         required: true,
         ref: 'Brand'
     },
@@ -43,11 +43,6 @@ const productSchema = new Schema({
     description: {
         type: String,
         trim: true
-    },
-    price: {
-        type: Number,
-        required: true,
-        min: 0
     },
     oldPrice: {
         type: Number,

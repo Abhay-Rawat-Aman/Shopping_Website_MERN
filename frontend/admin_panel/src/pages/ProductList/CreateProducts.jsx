@@ -20,6 +20,7 @@ import {
   IconButton,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
+import { createProduct } from "../../Api/authApi";
 
 const CreateProducts = () => {
   const [formData, setFormData] = useState({
@@ -29,24 +30,67 @@ const CreateProducts = () => {
     newPrice: "",
     discount: "",
     total: "",
-    category: "",
+    sales: "0",
+    categoryId: "60d5f485f5f6b3e7b4a4e7c3",
     subCategory: "",
     stock: "",
-    brand: "",
+    brandId: "60d5f4a3f5f6b3e7b4a4e7c4",
     weight: "",
     dimensions: "",
     image: null,
+    mainImage: null,
     colors: "",
+    rating: "",
     sizes: "",
   });
 
-  const [variants, setVariants] = useState([]);
-  // const [variantForm, setVariantForm] = useState({
-  //   id: "",
-  //   color: "",
-  //   size: "",
-  //   price: "",
-  // });
+  const [variations, setVariations] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleCreateProduct = async () => {
+    setIsLoading(true);
+    setError(null);
+
+     const formattedVariations = variations.map((variant, index) => ({
+       _id: index + 1,
+       additional_price: parseFloat(variant.additional_price) || 0,
+       stock: parseInt(variant.stock, 10) || 0,
+       details: [
+         {
+           variation_value_id:
+             variant.details?.[0]?.variation_value_id || index + 1,
+         },
+       ],
+     }));
+
+
+    const productData = {
+      ...formData,
+      oldPrice: parseFloat(formData.oldPrice),
+      newPrice: parseFloat(formData.newPrice),
+      discount: formData.discount,
+      stock: parseInt(formData.stock, 10),
+      rating: parseFloat(formData.rating),
+      image: formData.image ? URL.createObjectURL(formData.image) : null,
+      mainImage: formData.mainImage
+        ? URL.createObjectURL(formData.mainImage)
+        : null,
+      variations : formattedVariations,
+    };
+
+    console.log(productData);
+
+    try {
+      const result = await createProduct(productData);
+      console.log("Product created successfully:", result);
+    } catch (err) {
+      console.error("Error creating product:", err.message);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleVariantChange = (e) => {
     const { name, value } = e.target;
@@ -58,45 +102,57 @@ const CreateProducts = () => {
   }, [formData.colors, formData.sizes]);
 
   const generateVariants = () => {
-    const colors = formData.colors
-      .split(" ")
-      .filter((color) => color.trim() !== "");
-    const sizes = formData.sizes
-      .split(" ")
-      .filter((size) => size.trim() !== "");
+    const colors = formData.colors.split(",").map((color) => color.trim());
+    const sizes = formData.sizes.split(",").map((size) => size.trim());
 
     if (colors.length && sizes.length) {
-      const newVariants = colors.flatMap((color) =>
-        sizes.map((size) => ({
-          id: `${color}_${size}`,
+      const newVariants = colors.flatMap((color, colorIndex) =>
+        sizes.map((size, sizeIndex) => ({
+          id: `${color}_${size}`, 
           color,
           size,
-          variant: `${color}_${size}`,
-          price: "",
+          additional_price: "", 
+          stock: "", 
+          details: [
+            {
+              variation_value_id: colorIndex * sizes.length + sizeIndex + 1,
+            },
+          ],
         }))
       );
-      setVariants(newVariants);
+      setVariations(newVariants);
     } else {
-      setVariants([]);
+      setVariations([]);
     }
   };
 
+
   const handlePriceChange = (id, price) => {
-    setVariants((prev) =>
+    setVariations((prev) =>
       prev.map((variant) =>
-        variant.id === id ? { ...variant, price } : variant
+        variant.id === id ? { ...variant, additional_price: price } : variant
       )
     );
   };
 
+  const handleStockChange = (id, stock) => {
+    setVariations((prev) =>
+      prev.map((variant) =>
+        variant.id === id ? { ...variant, stock } : variant
+      )
+    );
+  };
+
+
+
   const deleteVariant = (id) => {
-    setVariants((prev) => prev.filter((variant) => variant.id !== id));
+    setVariations((prev) => prev.filter((variant) => variant.id !== id));
   };
 
   const calculatePrices = (oldPrice, newPrice) => {
     const old = parseFloat(oldPrice);
     const new_ = parseFloat(newPrice);
-    if (isNaN(old) || isNaN(new_)) return { discount: "", total: "" };
+    if (isNaN(old) || isNaN(new_)) return { discount: "0.00", total: "0.00" };
 
     const discount = old > 0 ? (((old - new_) / old) * 100).toFixed(2) : "0.00";
     const total = new_.toFixed(2);
@@ -115,27 +171,36 @@ const CreateProducts = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
     setFormData((prevState) => {
-      const newState = {
-        ...prevState,
-        [name]: files ? files[0] : value,
-      };
+      let newValue = files ? files[0] : value;
 
       if (name === "oldPrice" || name === "newPrice") {
+        const oldPrice = name === "oldPrice" ? value : prevState.oldPrice;
+        const newPrice = name === "newPrice" ? value : prevState.newPrice;
+
         const { discount, total } = calculatePrices(
-          name === "oldPrice" ? value : prevState.oldPrice,
-          name === "newPrice" ? value : prevState.newPrice
+          parseFloat(oldPrice) || 0,
+          parseFloat(newPrice) || 0
         );
-        newState.discount = discount;
-        newState.total = total;
+        newValue = value;
+        return {
+          ...prevState,
+          [name]: newValue,
+          discount,
+          total,
+        };
       }
 
-      if (name === "category") {
-        newState.subCategory = "";
-        setSubCategories(categoryMap[value] || []);
+      if (name === "categoryId") {
+        newValue = value;
+        setSubCategories(categoryMap[newValue] || []);
       }
 
-      return newState;
+      return {
+        ...prevState,
+        [name]: newValue,
+      };
     });
   };
 
@@ -145,17 +210,13 @@ const CreateProducts = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const finalData = {
-      ...formData,
-      variants,
-    };
-    console.log(finalData);
+    handleCreateProduct();
   };
 
   return (
     <>
-      <div className="card shadow my-4 border-0 flex flex-center p-4 ">
-        <div className="flex  justify-between flex-col">
+      <div className="card shadow my-4 border-0 flex flex-center p-4">
+        <div className="flex justify-between flex-col">
           <div className="flex items-center justify-between">
             <h3>Add New Product</h3>
           </div>
@@ -172,7 +233,7 @@ const CreateProducts = () => {
                 ProductsList
               </Link>
 
-              <Link className="activePage">Add Product List</Link>
+              <Typography color="textPrimary">Add Product List</Typography>
             </Breadcrumbs>
           </div>
         </div>
@@ -183,7 +244,7 @@ const CreateProducts = () => {
           Add New Product
         </h2>
 
-        <form onSubmit={handleSubmit} className="w-full">
+        <form onSubmit={handleSubmit} className="w-full" method="post">
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
               <Box className="bg-gray-400 p-6 rounded-lg shadow-md">
@@ -199,7 +260,7 @@ const CreateProducts = () => {
                     >
                       Product Name
                     </label>
-                    <input 
+                    <input
                       type="text"
                       id="name"
                       name="name"
@@ -230,18 +291,20 @@ const CreateProducts = () => {
 
                   <div>
                     <label
-                      htmlFor="brand"
+                      htmlFor="brandId"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Brand
+                      Brand ID
                     </label>
-                    <input 
+                    <input
                       type="text"
-                      id="brand"
-                      name="brand"
-                      value={formData.brand}
+                      id="brandId"
+                      disabled
+                      name="brandId"
+                      value={formData.brandId}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
                     />
                   </div>
                 </div>
@@ -262,7 +325,7 @@ const CreateProducts = () => {
                     >
                       Stock Quantity
                     </label>
-                    <input 
+                    <input
                       type="number"
                       id="stock"
                       name="stock"
@@ -278,16 +341,17 @@ const CreateProducts = () => {
                       htmlFor="weight"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Weight
+                      Weight (kg)
                     </label>
-                    <input 
+                    <input
                       type="text"
                       id="weight"
                       name="weight"
                       value={formData.weight}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., 1.5 kg"
+                      placeholder="e.g., 1.2 kg"
+                      required
                     />
                   </div>
 
@@ -296,16 +360,17 @@ const CreateProducts = () => {
                       htmlFor="dimensions"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Dimensions
+                      Dimensions (LxWxH cm)
                     </label>
-                    <input 
+                    <input
                       type="text"
                       id="dimensions"
                       name="dimensions"
                       value={formData.dimensions}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., 10 x 20 x 5 cm"
+                      placeholder="e.g., 20x10x5 cm"
+                      required
                     />
                   </div>
 
@@ -314,15 +379,34 @@ const CreateProducts = () => {
                       htmlFor="image"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Product Image
+                      Image
                     </label>
-                    <input 
+                    <input
                       type="file"
                       id="image"
                       name="image"
                       onChange={handleChange}
                       accept="image/*"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="mainImage"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Main Image
+                    </label>
+                    <input
+                      type="file"
+                      id="mainImage"
+                      name="mainImage"
+                      onChange={handleChange}
+                      accept="image/*"
+                      className="w-full"
+                      required
                     />
                   </div>
                 </div>
@@ -330,7 +414,7 @@ const CreateProducts = () => {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Box className="bg-gray-300 p-6 rounded-lg shadow-md">
+              <Box className="bg-gray-100 p-6 rounded-lg shadow-md">
                 <Typography variant="h6" className="mb-4">
                   Pricing Information
                 </Typography>
@@ -342,32 +426,16 @@ const CreateProducts = () => {
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
                       Old Price
-                      <Tooltip
-                        title="Enter the original price of the product"
-                        arrow
-                      >
-                        <InfoIcon
-                          fontSize="small"
-                          className="ml-1 text-gray-500"
-                        />
-                      </Tooltip>
                     </label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
-                        $
-                      </span>
-                      <input 
-                        type="number"
-                        id="oldPrice"
-                        name="oldPrice"
-                        value={formData.oldPrice}
-                        onChange={handleChange}
-                        className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="0.00"
-                        required
-                        step="0.01"
-                      />
-                    </div>
+                    <input
+                      type="number"
+                      id="oldPrice"
+                      name="oldPrice"
+                      value={formData.oldPrice}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
                   </div>
 
                   <div>
@@ -376,101 +444,83 @@ const CreateProducts = () => {
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
                       New Price
-                      <Tooltip title="Enter the new discounted price" arrow>
-                        <InfoIcon
-                          fontSize="small"
-                          className="ml-1 text-gray-500"
-                        />
-                      </Tooltip>
                     </label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
-                        $
-                      </span>
-                      <input 
-                        type="number"
-                        id="newPrice"
-                        name="newPrice"
-                        value={formData.newPrice}
-                        onChange={handleChange}
-                        className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="0.00"
-                        required
-                        step="0.01"
-                      />
-                    </div>
+                    <input
+                      type="number"
+                      id="newPrice"
+                      name="newPrice"
+                      value={formData.newPrice}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label
-                        htmlFor="discount"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Discount (%)
-                      </label>
-                      <input 
-                        type="text"
-                        id="discount"
-                        name="discount"
-                        value={formData.discount}
-                        readOnly
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
-                      />
-                    </div>
+                  <div>
+                    <label
+                      htmlFor="discount"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Discount (%)
+                    </label>
+                    <input
+                      type="text"
+                      id="discount"
+                      name="discount"
+                      value={formData.discount}
+                      readOnly
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+                    />
+                  </div>
 
-                    <div>
-                      <label
-                        htmlFor="total"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Final Price
-                      </label>
-                      <div className="relative">
-                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
-                          $
-                        </span>
-                        <input 
-                          type="text"
-                          id="total"
-                          name="total"
-                          value={formData.total}
-                          readOnly
-                          className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
-                        />
-                      </div>
-                    </div>
+                  <div>
+                    <label
+                      htmlFor="total"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Total Price
+                    </label>
+                    <input
+                      type="text"
+                      id="total"
+                      name="total"
+                      value={formData.total}
+                      readOnly
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+                    />
                   </div>
                 </div>
               </Box>
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Box className="bg-gray-400 p-6 rounded-lg shadow-md">
+              <Box className="bg-gray-50 p-6 rounded-lg shadow-md">
                 <Typography variant="h6" className="mb-4">
-                  Category Information
+                  Categories & Variants
                 </Typography>
 
                 <div className="space-y-4">
                   <div>
                     <label
-                      htmlFor="category"
+                      htmlFor="categoryId"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
                       Category
                     </label>
                     <select
-                      id="category"
+                      id="categoryId"
                       name="category"
-                      value={formData.category}
+                      value={formData.categoryId}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
-                      <option value="">Select a category</option>
-                      {Object.keys(categoryMap).map((category) => (
-                        <option key={category} value={category}>
-                          {category.charAt(0).toUpperCase() + category.slice(1)}
+                      <option value="" disabled>
+                        Select a category
+                      </option>
+                      {Object.keys(categoryMap).map((key) => (
+                        <option key={key} value={key}>
+                          {key}
                         </option>
                       ))}
                     </select>
@@ -490,9 +540,10 @@ const CreateProducts = () => {
                       onChange={handleChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
-                      disabled={!formData.category}
                     >
-                      <option value="">Select a sub category</option>
+                      <option value="" disabled>
+                        Select a sub-category
+                      </option>
                       {subCategories.map((subCategory) => (
                         <option key={subCategory} value={subCategory}>
                           {subCategory}
@@ -500,118 +551,177 @@ const CreateProducts = () => {
                       ))}
                     </select>
                   </div>
-                </div>
-              </Box>
-            </Grid>
 
-            <Grid item xs={12}>
-              <Box className="bg-slate-200 p-6 rounded-lg shadow-md">
-                <Typography variant="h6" className="mb-4">
-                  Product Variants
-                </Typography>
+                  <div>
+                    <label
+                      htmlFor="colors"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Colors
+                    </label>
+                    <input
+                      type="text"
+                      id="colors"
+                      name="colors"
+                      value={formData.colors}
+                      onChange={handleVariantChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Black, White"
+                      required
+                    />
+                  </div>
 
-                <div className="space-y-4 mb-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label
-                        htmlFor="colors"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Colors (space-separated)
-                      </label>
-                      <input 
-                        type="text"
-                        id="colors"
-                        name="colors"
-                        value={formData.colors}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                        placeholder="e.g. red blue yellow"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="sizes"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Sizes (space-separated)
-                      </label>
-                      <input 
-                        type="text"
-                        id="sizes"
-                        name="sizes"
-                        value={formData.sizes}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                        placeholder="e.g. S M L XL"
-                      />
-                    </div>
+                  <div>
+                    <label
+                      htmlFor="sizes"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Sizes
+                    </label>
+                    <input
+                      type="text"
+                      id="sizes"
+                      name="sizes"
+                      value={formData.sizes}
+                      onChange={handleVariantChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., S, M, L, XL"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="sales"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Sales
+                    </label>
+                    <input
+                      type="number"
+                      id="sales"
+                      name="sales"
+                      value={formData.sales}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="rating"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Rating
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      id="rating"
+                      name="rating"
+                      value={formData.rating}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
                   </div>
                 </div>
-
-                <TableContainer component={Paper} className="shadow">
-                  <Table stickyHeader>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell style={{ backgroundColor: "bisque" }}>
-                          Color
-                        </TableCell>
-                        <TableCell style={{ backgroundColor: "bisque" }}>
-                          Size
-                        </TableCell>
-                        <TableCell style={{ backgroundColor: "bisque" }}>
-                          Variant
-                        </TableCell>
-                        <TableCell style={{ backgroundColor: "bisque" }}>
-                          Price
-                        </TableCell>
-                        <TableCell style={{ backgroundColor: "bisque" }}>
-                          Actions
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {variants.map((variant) => (
-                        <TableRow key={variant.id}>
-                          <TableCell>{variant.color}</TableCell>
-                          <TableCell>{variant.size}</TableCell>
-                          <TableCell>{variant.variant}</TableCell>
-                          <TableCell>
-                            <input 
-                              type="number"
-                              value={variant.price}
-                              onChange={(e) =>
-                                handlePriceChange(variant.id, e.target.value)
-                              }
-                              className="w-full px-2 py-1 border border-gray-300 rounded"
-                              placeholder="Enter price"
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <IconButton
-                              onClick={() => deleteVariant(variant.id)}
-                              size="small"
-                            >
-                              <RiDeleteBinLine />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
               </Box>
             </Grid>
-
-            <Grid item xs={12}>
-              <button
-                type="submit"
-                className="w-full py-3 px-4 btn-color hover:bg-blue-700 text-white font-bold rounded-lg transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-              >
-                Add Product
-              </button>
-            </Grid>
           </Grid>
+
+          <Box className="bg-gradient-to-br from-gray-100 to-gray-200 p-6 rounded-lg shadow-md mt-8">
+            <Typography variant="h6" className="mb-4 text-gray-700 font-bold">
+              Variants
+            </Typography>
+            <TableContainer
+              component={Paper}
+              className="shadow-lg rounded-lg overflow-hidden"
+            >
+              <Table>
+                <TableHead>
+                  <TableRow className="bg-gradient-to-r from-gray-500 to-gray-600">
+                    <TableCell className="font-bold text-white">
+                      Variant
+                    </TableCell>
+                    <TableCell align="center" className="font-bold text-white">
+                      Additional Price
+                    </TableCell>
+                    <TableCell align="center" className="font-bold text-white">
+                      stock
+                    </TableCell>
+                    <TableCell align="center" className="font-bold text-white">
+                      Actions
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {variations.map((variant, index) => (
+                    <TableRow
+                      key={variant.id}
+                      className={
+                        index % 2 === 0
+                          ? "bg-gray-50"
+                          : "bg-white hover:bg-gray-100 transition-colors duration-200"
+                      }
+                    >
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className="font-medium text-gray-700"
+                      >
+                        {variant.color} / {variant.size}
+                      </TableCell>
+                      <TableCell align="right">
+                        <input
+                          type="number"
+                          value={variant.additional_price}
+                          onChange={(e) =>
+                            handlePriceChange(variant.id, e.target.value)
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-400 focus:border-transparent transition-all duration-200 text-center"
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <input
+                          type="number"
+                          value={variant.stock}
+                          onChange={(e) =>
+                            handleStockChange(variant.id, e.target.value)
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-400 focus:border-transparent transition-all duration-200 text-center"
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Tooltip title="Delete">
+                          <IconButton
+                            onClick={() => deleteVariant(variant.id)}
+                            className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                          >
+                            <RiDeleteBinLine />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+
+          <div className="mt-6 flex justify-end">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCreateProduct}
+              disabled={isLoading}
+            >
+              {isLoading ? "Creating..." : "Create Product"}
+            </Button>
+
+            {error && <p className="text-red-600 mt-2">{error}</p>}
+          </div>
         </form>
       </div>
     </>

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { MyContext } from "../../App"; // Adjust the path if necessary
+import { MyContext } from "../../App"; 
 import logo from "../../assets/Images/logo.png";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
@@ -92,7 +92,7 @@ const Sidebar = () => {
                   <div
                     className={`${
                       sidebarCollapsed ? "opacity-0" : "opacity-100"
-                    } transition-opacity duration-300`}
+                    } transition-opacity duration-300  `}
                   >
                     Dashboard
                   </div>
@@ -113,14 +113,14 @@ const Sidebar = () => {
                 <span
                   className={`${
                     sidebarCollapsed ? "opacity-0" : "opacity-100"
-                  } transition-opacity duration-300`}
+                  } transition-opacity duration-300  `}
                 >
                   Products
                 </span>
                 <span
                   className={`arrow mx-auto w-[30px] h-[30px] flex items-center justify-center ${
                     sidebarCollapsed ? "opacity-0" : "opacity-100"
-                  } transition-opacity duration-300`}
+                  } transition-opacity duration-300  `}
                 >
                   <FaAngleRight
                     className={
@@ -140,7 +140,7 @@ const Sidebar = () => {
                       : "colapsed"
                   } ${
                     sidebarCollapsed ? "opacity-0" : "opacity-100"
-                  } transition-opacity duration-300`}
+                  } transition-opacity duration-300  `}
                 >
                   <div className="submenu mt-1">
                     <Link to="/products/productList">
@@ -164,7 +164,7 @@ const Sidebar = () => {
               <Button
                 className={`w-100 flex items-center justify-between ${
                   isActiveTab === 2 ? "active" : ""
-                }`}
+                } `}
                 onClick={() => isSubmenu(2)}
               >
                 <span className="icon mr-3 w-[25px] h-[35px] flex items-center justify-center rounded-md">
@@ -240,7 +240,7 @@ const Sidebar = () => {
               </Button>
             </li>
 
-            <li>
+            <li style={{ zoom: "88%", fontWeight : "bold" }}>
               <Button
                 className={`w-100 flex items-center justify-between ${
                   isActiveTab === 7 ? "active" : ""

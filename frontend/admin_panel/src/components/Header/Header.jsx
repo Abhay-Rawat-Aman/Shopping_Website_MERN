@@ -21,7 +21,6 @@ const Header = () => {
   const open = Boolean(anchorEl);
   const navigate = useNavigate(); // Initialize navigate
   const context = useContext(MyContext);
-  const userName = context.user?.email || "pawan";
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -116,7 +115,6 @@ const Header = () => {
                 Settings
               </MenuItem>
               <MenuItem onClick={handleLogout}>
-
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>
@@ -125,7 +123,8 @@ const Header = () => {
             </Menu>
           </li>
           <li>
-            {userName}
+            {localStorage.getItem("firstName") +" " +
+              localStorage.getItem("lastName")}
           </li>
         </ul>
       </div>

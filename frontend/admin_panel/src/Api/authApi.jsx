@@ -45,6 +45,8 @@ export const logout = async (userData) => {
     const response = await axios.post(`${BASE_URL}/logout`, userData, {
       withCredentials: true,
     });
+    localStorage.removeItem("firstName");
+    localStorage.removeItem("lastName");
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : new Error("Network Error");
@@ -81,5 +83,62 @@ export const updateProduct = async (id, data) => {
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || "Error updating product");
+  }
+};
+
+export const deleteProduct = async (id) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/deleteProduct/${id}`,{
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Error updating product");
+  }
+};
+
+export const createProduct = async (productData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/createProduct`,productData,{
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Error creating product");
+  }
+};
+
+export const addVariationType = async (variationTypeData) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/createVariationType`,
+      variationTypeData,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Error creating variation type"
+    );
+  }
+};
+
+export const addVariationValue = async (variationValueData) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/createVariationValue`,
+      variationValueData,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Error creating variation value"
+    );
   }
 };

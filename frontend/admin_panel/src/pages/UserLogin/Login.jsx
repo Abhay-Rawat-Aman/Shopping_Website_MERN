@@ -67,9 +67,14 @@ const Login = () => {
 
     try {
       const response = await LoginUser(userData);
+      
+
       console.log("User Logged API resp:", response.data);
       if (response.success ) {
         // await handleLoginSuccess(response);
+        localStorage.setItem("firstName", response.data.fname);
+        localStorage.setItem("lastName", response.data.lname);
+          
         console.log(response);
         navigate("/");
         context.setisHeaderFooterShown(true);

@@ -13,11 +13,14 @@ import { IoMdAdd } from "react-icons/io";
 import { FaCartShopping } from "react-icons/fa6";
 import InfoIcon from "@mui/icons-material/Info";
 import CircularProgress from "@mui/material/CircularProgress";
-import { getAllProduct } from "../../Api/authApi";
+import { getAllProduct, deleteProduct } from "../../Api/authApi";
+import Model from "../../components/Model/model";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [productIdToDelete, setProductIdToDelete] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -36,6 +39,28 @@ const ProductList = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const handleDeleteClick = (id) => {
+    setProductIdToDelete(id);
+    setShowModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (productIdToDelete) {
+      try {
+        await deleteProduct(productIdToDelete);
+        setProducts((prevProducts) =>
+          prevProducts.filter((product) => product._id !== productIdToDelete)
+        );
+        alert("Product deleted successfully");
+      } catch (error) {
+        console.error("Error deleting product:", error);
+        alert("Failed to delete product. Please try again.");
+      } finally {
+        setShowModal(false);
+        setProductIdToDelete(null);
+      }
+    }
+  };
 
   return (
     <>
@@ -65,7 +90,7 @@ const ProductList = () => {
                 <HomeIcon fontSize="inherit" className="mr-2" />
                 Home
               </Link>
-              <Link to="/products">
+              <Link to="/products/productList">
                 <FaCartShopping fontSize="inherit" className="mr-2" />
                 Products
               </Link>
@@ -74,7 +99,6 @@ const ProductList = () => {
           </div>
         </div>
       </div>
-
       <div className="card shadow mt-[12px] w-full">
         <div className="flex items-center justify-between mb-4 pt-4 px-4">
           <h4 className="font-bold font-mono text-center mb-0">Products</h4>
@@ -134,7 +158,9 @@ const ProductList = () => {
                           />
                         </div>
                         <div>
-                          <h6 className="font-semibold text-black">{product.name}</h6>
+                          <h6 className="font-semibold text-black">
+                            {product.name}
+                          </h6>
                         </div>
                       </div>
                     </td>
@@ -181,7 +207,10 @@ const ProductList = () => {
                           </button>
                         </Tooltip>
                         <Tooltip title="Delete" arrow placement="top">
-                          <button className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-200 text-gray-500 hover:text-gray-700">
+                          <button
+                            className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-200 text-gray-500 hover:text-gray-700"
+                            onClick={() => handleDeleteClick(product._id)}
+                          >
                             <MdDeleteOutline />
                           </button>
                         </Tooltip>
@@ -195,9 +224,17 @@ const ProductList = () => {
             <div className="py-4 text-center">No products found.</div>
           )}
         </div>
-
-        
       </div>
+      {showModal && (
+        <Model
+          handleConfirmDelete={handleConfirmDelete}
+          setShowModal={setShowModal}
+          errorTitle={"Are you sure you want to delete this product?"}
+          Yes={"Yes, I'm sure"}
+          No={"No, I'm not sure"}
+        />
+      )}
+      ;
     </>
   );
 };
