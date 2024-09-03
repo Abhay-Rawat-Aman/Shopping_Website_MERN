@@ -1,0 +1,65 @@
+.loginWrapper {
+    padding: 45px 0px;
+}
+
+.loginWrapper .card {
+    width: 550px;
+    padding: 40px;
+    margin: auto;
+    border: 0px !important;
+}
+
+.loginWrapper .card button {
+    padding: 15px 25px !important;
+}
+
+.loginWrapper .card h3 {
+    font-size: 35px;
+    font-weight: 600;
+}
+
+.loginWrapper .card input {
+    height: 40px !important;
+}
+
+.loginWrapper .card fieldset {
+    border-radius: 15px !important;
+}
+
+.loginWrapper .card .MuiFormLabel-root {
+    line-height: 40px;
+    font-size: 18px !important;
+}
+
+.loginWrapper .card .icon {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    z-index: 100;
+    min-width: 50px !important;
+    width: 30px;
+    min-height: 30px !important;
+    border-radius: 20px;
+    color: #ccc;
+}
+
+.loginWrapper .card .icon {
+    color: #000;
+    opacity: .8;
+}
+
+.SignInOr button {
+    padding: 15px 25px !important;
+    color: #000;
+    font-size: 15px;
+}
+
+.SignInOr button img {
+    width: 40px;
+    margin-right: 10px;
+
+}
+
+/* .FormLoader{
+    position: absolute !important;
+} */

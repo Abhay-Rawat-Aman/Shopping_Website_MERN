@@ -1,0 +1,33 @@
+
+.listingPage {
+    width: 100%;
+    height: auto;
+    padding: 45px 0px;
+}
+
+.breadcrumb {
+    width: 100% !important;
+    height: auto !important;
+    padding: 5px 35px !important;
+    background-color: #d8f1e5 !important;
+    border: 1px solid #85a998 !important;
+    border-radius: 14px !important;
+}
+
+.breadcrumb h1 {
+    color: #000;
+    font-size: 50px;
+    opacity: .8;
+    font-weight: 700;
+}
+
+.breadcrumb ul li {
+    margin-right: 12px !important;
+}
+
+.breadcrumb ul li a {
+    color: black !important;
+    text-decoration: none !important;
+    font-size: 18px !important;
+}
+    

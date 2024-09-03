@@ -70,7 +70,7 @@ exports.fetchUser = async (req, res) => {
             throw new ApiErrorHandler(400, "Email is required");
         }
 
-        console.log(email);
+        // console.log(email);
 
         const user = await User.findOne({email});
 

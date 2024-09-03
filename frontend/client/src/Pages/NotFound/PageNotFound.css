@@ -1,0 +1,27 @@
+.notFound{
+    width: 100%;
+    height: auto;
+    padding: 45px 0px;
+}
+
+.notFound .box{
+    width: 50%;
+    height: auto;
+    padding: 100px 30px;
+    text-align: center;
+    margin: auto;
+}
+
+.notFound .box p{
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.btn-lg a{
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-lg button{
+    margin-top: 12px;
+}

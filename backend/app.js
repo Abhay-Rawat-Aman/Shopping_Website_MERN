@@ -4,15 +4,15 @@ const app = express();
 const path = require('path');
 const cors = require('cors');
 
-
 if(process.env.NOD_ENV!="PRODUCTION"){
     require('dotenv').config({path:"./config/config.env"})
     console.log(process.env.DB_URL);
 }
 
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:3001', 'http://localhost:3000'];
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']

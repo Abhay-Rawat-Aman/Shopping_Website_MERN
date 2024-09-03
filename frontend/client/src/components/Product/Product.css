@@ -1,0 +1,218 @@
+.productThumb {
+    width: 100%;
+    height: auto !important;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 19px;
+    padding: 10px 3px;
+    transition: all 0.25s ease-in-out;
+    position: relative;
+    background-color: #fff;
+    /* Added for better visibility */
+}
+
+.productThumb:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.productThumb .badge {
+    position: absolute;
+    top: 10px;
+    /* Adjusted from 0 for better visibility */
+    left: 10px;
+    /* Adjusted from 0 for better visibility */
+    display: inline-block !important;
+    background-color: rebeccapurple;
+    padding: 8px 12px;
+    /* Adjusted padding for better spacing */
+    font-size: 14px;
+    z-index: 10;
+    color: #fff;
+    border-radius: 10px;
+    /* Adjusted for rounded corners */
+    text-transform: capitalize;
+}
+
+.productThumb .hot {
+    background-color: #f74b81 !important;
+}
+
+.productThumb .sale {
+    background-color: #67bcee !important;
+}
+
+.productThumb .new {
+    background-color: #3BB77E !important;
+}
+
+.productThumb .best {
+    background-color: #f59758 !important;
+}
+
+.productThumb .imageWrapper {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    /* Rounded corners for image container */
+}
+
+.productThumb .discount {
+    position: absolute;
+    top: 0px;
+    left: 10px;
+    background-color: #f74b81;
+    color: #fff;
+    /* White text color */
+    padding: 5px 10px;
+    /* Padding around the text */
+    border-radius: 5px;
+    /* Rounded corners */
+    font-size: 16px;
+    /* Font size of the discount */
+    font-weight: bold;
+    /* Make the text bold */
+    text-transform: uppercase;
+    /* Uppercase text */
+    z-index: 10;
+    /* Ensure the discount is above other elements */
+}
+
+.productThumb .imageWrapper .wrapper {
+    height: 300px;
+    overflow: hidden;
+    padding: 20px !important;
+}
+
+.productThumb .imageWrapper img {
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    zoom: 90%;
+}
+
+.productThumb:hover .imageWrapper img {
+    transform: scale(1.1);
+}
+
+.productThumb .CatName {
+    color: #000;
+    opacity: 0.6;
+    font-size: 14px;
+}
+
+.productThumb .title {
+    margin: 10px 0;
+    /* Increased margin for better spacing */
+}
+
+.productThumb .title a {
+    line-height: 1.2;
+    /* Adjusted for better text spacing */
+    color: #000;
+    font-weight: 500;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.productThumb .brand {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 13px;
+}
+
+.productThumb .brand a {
+    text-decoration: none;
+}
+
+.productThumb .price {
+    font-size: 15px;
+    font-weight: 800;
+    color: #229f65;
+    margin-right: 14px;
+}
+
+.productThumb .oldPrice {
+    font-size: 13px;
+    opacity: 0.6;
+    color: #000;
+    text-decoration: line-through;
+}
+
+.productThumb .info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.productThumb .info .d-flex {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.productThumb button {
+    font-size: 15px !important;
+    font-weight: 700;
+    color: #3bb77e;
+    padding: 10px 20px;
+    /* Adjusted padding for better button appearance */
+    background-color: #cae5d8;
+    text-transform: capitalize !important;
+    margin: 5px 0;
+    /* Margin for spacing between buttons */
+    border-radius: 5px;
+    /* Rounded corners for buttons */
+}
+
+.productThumb button svg {
+    font-size: 17px;
+    margin-right: 4px;
+}
+
+.productThumb button:hover {
+    background-color: #3bb77e;
+    color: #fff;
+}
+
+.productThumb .info .buttonContainer {
+    display: flex;
+    /* Use flexbox to align buttons horizontally */
+    gap: 10px;
+    /* Space between buttons */
+    margin-top: 15px;
+    /* Space above the button container */
+    width: 100%;
+}
+
+.productThumb .info .buttonContainer button {
+    flex: 1;
+    /* Make buttons take equal width */
+    font-size: 15px !important;
+    font-weight: 700;
+    color: #fff;
+    padding: 10px;
+    /* Adjust padding for better button appearance */
+    text-transform: capitalize !important;
+    border-radius: 5px;
+    /* Rounded corners for buttons */
+}
+
+.productThumb .info .buttonContainer .addToCartButton {
+    background-color: #3bb77e;
+    /* Green color for 'Add to cart' */
+    color: #fff;
+    font-size: 12px;
+    /* White text color */
+}
+
+.productThumb .info .buttonContainer .buyNowButton {
+    background-color: #f74b81;
+    /* Pink color for 'Buy Now' */
+    color: #fff;
+    /* White text color */
+}
+
+.productThumb .info .buttonContainer button:hover {
+    opacity: 0.9;
+}

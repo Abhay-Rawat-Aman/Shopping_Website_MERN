@@ -1,0 +1,107 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css');
+
+.homeSlider {
+    padding: 25px 0px;
+}
+
+.home_slider_main {
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+}
+
+.slick-arrow {
+    position: absolute;
+    top: 47%;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    background: #F2F3F4;
+    z-index: 1000;
+}
+
+.slick-arrow.slick-next {
+    right: 2% !important;
+    transition: all .23s ease-in-out;
+    box-shadow: 0 3px 6px rgb(0 0 0 / 20%);
+}
+
+.slick-arrow.slick-prev {
+    left: 2% !important;
+    transition: all .23s ease-in-out;
+    box-shadow: 0 3px 6px rgb(0 0 0 / 20%);
+}
+
+
+/* hover for prev */
+.slick-slider .slick-arrow.slick-prev:hover {
+    color: #fff !important;
+}
+
+.slick-slider .slick-prev::before {
+    content: "\f060" !important;
+    font-family: FontAwesome !important;
+    color: inherit;
+}
+
+.slick-slider .slick-prev {
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.slick-slider .slick-next::before {
+    content: "\f061" !important;
+    font-family: FontAwesome !important;
+    color: inherit;
+}
+
+
+/* for next arrow */
+.slick-slider .slick-arrow.slick-next:hover {
+    color: #fff !important;
+}
+
+
+.slick-slider .slick-next {
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.slick-arrow:hover {
+    background:#3bb77e ;
+}
+
+.home_slider_main .slick-dots{
+    position: absolute;
+    bottom: 30px;
+}
+
+.home_slider_main .slick-dots button::before{
+    font-size: 18px !important;
+}
+  
+.slick-active button::before{
+    color: #3bb77e !important;
+}
+
+.home_slider_main .item{
+    position: relative;
+}
+
+.home_slider_main .item .info{
+    position: absolute;
+    top: 15%;
+    left: 7%;
+    z-index: 100;
+}
+
+.home_slider_main .item .info h2{
+    font-size: 55px !important;
+    font-weight: bolder;
+    color: rgba(0, 0, 0, 0.68);
+}
+
+.home_slider_main .item .info p{
+    font-size: 30px;
+    font-weight: 600;
+    color: #7E7E7E;
+}

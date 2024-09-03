@@ -1,0 +1,99 @@
+.cartSection {
+    width: 100%;
+    height: auto;
+    padding: 25px 0px;
+}
+
+.cartSection .clearCart {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.cartSection .clearCart svg {
+    font-size: 30px !important;
+}
+
+.cartWrapper table thead {
+    background: #f1f1f1;
+    overflow: hidden;
+}
+
+.cartWrapper table thead th{
+    background-color: #ececec;
+    padding: 18px 0px;
+    font-family: "Quicksand", sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #253D4E;;
+}
+
+.cartWrapper table thead th:first-child {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.cartWrapper table thead th:last-child {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+
+.cartWrapper table tbody td{
+    vertical-align: middle;
+}
+
+.cartWrapper table thead .first {
+    width: 50%;
+}
+
+.cartWrapper table tbody td{
+    font-weight: 500;
+    font-size: 17px;
+}
+.cartWrapper table tbody td .img{
+    width: 100px !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.cartWrapper table tbody td .info a{
+    color: rgba(0, 0, 0, 0.7);
+    text-decoration: none;
+}
+
+.cartWrapper table tbody td .info a h5{
+    font-size: 15px !important;
+}
+
+.cartWrapper table tbody td .info a:hover{
+    text-decoration: none;
+}
+
+.addCartSection .counterSec{
+    width: 90px;
+    height: 56px;
+    border: 1px solid rgba(0, 0, 0, 0.53) !important;
+    border-radius: 19px;
+    overflow: hidden;
+    padding: 12px;
+    margin-right: 13px;
+}
+
+.addCartSection .counterSec input{
+    background: none;
+}
+
+.cartRightBox{
+    padding-left: 100px !important;
+    margin-top: 7rem !important;
+}
+
+
+.cartRightBox .shadow .tableInfo{
+    font-size: 14px !important;
+}
+
+.cartRightBox .shadow .tableInfoDetail{
+    font-size: 17px;
+}

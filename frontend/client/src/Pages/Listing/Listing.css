@@ -1,0 +1,39 @@
+.homeProducts .productRow .item{
+    width: 24%;
+}
+
+.homeProducts .productRow{
+    justify-content: center;
+    align-items: center;
+}
+
+.rightContent{
+    max-width: 80%;
+    flex: 0 0 80%;
+}
+
+.rightContent .topStrip{
+    padding: 0px 65px;
+}
+
+.rightContent .topStrip p{
+    font-size: 18px;
+}
+
+.rightContent .topStrip .tab_ .btn{
+    background: none;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    padding: 7px 20px;
+    text-transform: capitalize;
+    border-radius: 14px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.rightContent .topStrip .tab_ .dropdownMenue{
+    top: 100% !important;
+}
+
+.rightContent .topStrip .tab_ .btn svg{
+    margin-right: 5px;
+}

@@ -1,0 +1,103 @@
+.homeProducts{
+    padding: 25px 0px;
+}
+
+.filterTab li{
+    margin-left: 15px;
+    position: relative;
+}
+
+.filterTab li a{
+    color: #000;
+    text-decoration: none !important;
+    font-size: 16px;
+    font-weight: 700 !important ;
+    transition: all .2s ease-in-out !important;
+    font-size: 13px;
+
+}
+
+.filterTab li:hover a {
+    color: #3bb77e;
+    top: -5px;
+}
+
+.filterTab li a.act{
+    color: #3bb77e;
+    top: -5px;
+}
+
+.homeProducts .productRow{
+    display: flex;
+    flex-wrap: wrap;
+    /* padding: 30px 0px; */
+}
+
+.homeProducts .productRow .item{
+    width: 25%  ;
+    padding: 10px 8px;
+}
+
+.homeProductWrapper .productRow .item{
+    width: 20% !important;
+}
+
+.homeProductsRow2 .productSlider .item{
+    margin-top: 15px;
+    padding: 20px 10px;
+    padding-right: 20px  !important;
+}
+
+.wide .productThumb .imageWrapper .overlay {
+    padding: 5px;
+}
+
+.topProductSection{
+    padding: 35px 0px;
+}
+
+.newsLetterSection{
+    width: 100%;
+    height: auto;
+}
+
+.newsLetterSection .box{
+    background: url(../../assets/Images/newsletterCover.png);
+    padding: 40px;
+    width: 100%;
+    height: auto;
+    border-radius: 40px;
+    overflow: hidden;
+}
+
+.newsLetterSection .box .info {
+    width: 50% !important;
+}
+
+.newsLetterSection .box .info h2{
+    font-size: 50px;
+    line-height: 60px;
+    /* opacity: .8; */
+    font-weight: bold;
+    color: #253D4E;
+    margin-bottom: 16px;
+}
+
+.newsLetterSection .box .info p{
+    font-size: 20px;
+}
+
+.newsLetterSection .box .img {
+    width: 50% !important;
+}
+
+.newsLetterSection .box .img img{
+    position: relative;
+    top: 40px;
+}
+
+.newsLetterSection .box .newsletter{
+    position: relative;
+    left: 0;
+    bottom: inherit !important;
+}
