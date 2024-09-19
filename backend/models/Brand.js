@@ -5,7 +5,7 @@ const brandSchema = new Schema({
     brandName: {
         type: String,
         required: true,
-        trim: true,
+        trim: true, 
         unique: true
     },
     description: {

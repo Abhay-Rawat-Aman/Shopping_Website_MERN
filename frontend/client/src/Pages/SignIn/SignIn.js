@@ -49,6 +49,7 @@ const SignIn = () => {
             localStorage.setItem('isLogin', true);
             localStorage.setItem("firstName", result.data.fname);
             localStorage.setItem("lastName", result.data.lname);
+            localStorage.setItem("UserId", result.data.id);
             context.signIn();
             navigate('/');
         } catch (error) {

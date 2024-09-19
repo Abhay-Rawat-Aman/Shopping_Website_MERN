@@ -18,7 +18,7 @@ export const LoginUser = async (userData) => {
     const response = await axios.post(`${BASE_URL}/login`, userData, {
       withCredentials: true,
     });
-  
+
     console.log("Raw response:", response.data);
     return response.data;
   } catch (error) {
@@ -66,9 +66,12 @@ export const getAllProduct = async () => {
 
 export const getPoductById = async (productId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/getProductById/${productId}`, {
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      `${BASE_URL}/getProductById/${productId}`,
+      {
+        withCredentials: true,
+      }
+    );
     return response.data.data;
   } catch (error) {
     throw error.response ? error.response.data : new Error("Network Error");
@@ -88,7 +91,7 @@ export const updateProduct = async (id, data) => {
 
 export const deleteProduct = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/deleteProduct/${id}`,{
+    const response = await axios.get(`${BASE_URL}/deleteProduct/${id}`, {
       withCredentials: true,
     });
     return response.data;
@@ -99,9 +102,13 @@ export const deleteProduct = async (id) => {
 
 export const createProduct = async (productData) => {
   try {
-    const response = await axios.post(`${BASE_URL}/createProduct`,productData,{
-      withCredentials: true,
-    });
+    const response = await axios.post(
+      `${BASE_URL}/createProduct`,
+      productData,
+      {
+        withCredentials: true,
+      }
+    );
 
     return response.data;
   } catch (error) {
@@ -142,3 +149,80 @@ export const addVariationValue = async (variationValueData) => {
     );
   }
 };
+
+export const createCategory = async (categoryDetails) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/createCategory`,
+      categoryDetails,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Error creating category");
+  }
+};
+
+export const createBrand = async (brandDetails) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/createBrand`, brandDetails, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Error creating category");
+  }
+};
+
+export const getCategories = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/getCategories`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Error creating category");
+  }
+};
+
+export const getCategoryByName = async (CategoryName) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/getCategoryByName/${CategoryName}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Error creating category");
+  }
+};
+
+export const getCategoryById = async (CategoryId) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/getCategoryByName/${CategoryId}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Error creating category");
+  }
+};
+
+export const getBrands = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/getBrands`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Error creating Brand");
+  }
+};
+

@@ -7,7 +7,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import WishlistIcon from '../../assets/Images/icon-heart.svg';
 import Cart from '../../assets/Images/icon-cart.svg';
 import Account from '../../assets/Images/icon-user.svg';
-import Nav from './Nav/Nav';  // Assuming Nav still exists
+import Nav from './Nav/Nav';
 
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import Button from '@mui/material/Button';
@@ -75,17 +75,19 @@ const Header = () => {
                 <header>
                     <div className='container-fluid'>
                         <div className='row'>
-                            <div className='col-sm-2 d-flex align-items-center'>
+                            <div className='col-sm-2 d-flex align-items-center justify-center'>
                                 <img src={Logo} height="50px" alt="Logo" />
                             </div>
 
                             <div className='col-sm-5'>
                                 <div className='headerSearch d-flex align-items-center'>
-                                    <Select
-                                        data={categories}
-                                        placeholder={"All Categories"}
-                                        icon={false}
-                                    />
+                                    <div className='selectBoxes'>
+                                        <Select
+                                            data={categories}
+                                            placeholder={"All Categories"}
+                                            icon={false}
+                                        />
+                                    </div>
                                     <div className='search'>
                                         <input type='text' placeholder='Search the Item' />
                                         <SearchIcon className='SearchIcon cursor' />
@@ -104,13 +106,13 @@ const Header = () => {
                                     </div>
                                     <ClickAwayListener onClickAway={() => setIsOpenDropdown(false)}>
                                         <ul className='list list-inline mb-0 headerTabs'>
-                                            <li className='list-inline-items'>
+                                            {/* <li className='list-inline-items'>
                                                 <span>
                                                     <img src={WishlistIcon} alt="Wishlist" />
                                                     <span className='badge bg-success rounded-circle'>3</span>
                                                     Wishlist
                                                 </span>
-                                            </li>
+                                            </li> */}
                                             <li className='list-inline-items'>
                                                 <span>
                                                     <img src={Cart} alt="Cart" />

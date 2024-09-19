@@ -4,6 +4,21 @@ const {Schema} = mongoose;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const addressSchema = new Schema({
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    postalCode: { type: String, required: true },
+    country: { type: String, required: true }
+});
+
+// Define the Cart Item Schema
+const cartItemSchema = new Schema({
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+    quantity: Number,
+    price: Number
+});
+
 const userScheme = new Schema({
     fname:{
         type: String,
@@ -29,7 +44,12 @@ const userScheme = new Schema({
     },
     refreshToken: {
         type: String,
-    }
+    },
+    wishlist: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+    cart: [cartItemSchema],
+    addresses: [addressSchema]
+
+
 },{timestamps: true})
 
 

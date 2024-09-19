@@ -128,7 +128,7 @@ const Dashboard = () => {
                       <div className="flex items-center gap-2 w-[300px] justify-center productWrapper">
                         <div className="imageWrapper shadow overflow-hidden w-[20%] h-[20%] rounded-lg">
                           <img
-                            src={product.image}
+                            src={product.mainImage}
                             alt="product"
                             className="w-full h-full"
                           />

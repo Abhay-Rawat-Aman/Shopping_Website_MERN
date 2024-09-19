@@ -27,6 +27,10 @@ const ProductDetails = () => {
         fetchProductData();
     }, [productId]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     const handleAttributeClick = (attr, index) => {
         setActiveAttributes((prev) => ({
             ...prev,

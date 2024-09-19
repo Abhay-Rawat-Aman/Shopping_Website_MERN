@@ -10,6 +10,7 @@ import { MyContext } from '../../App';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { addToCart } from '../../Api/authAPI';
 
 const Product = (props) => {
     const [productData, setProductData] = useState(props.item || {});
@@ -35,9 +36,31 @@ const Product = (props) => {
         sessionStorage.setItem('subCatName', productData.subCatName || '');
     };
 
-    const handleAddToCart = () => {
-        context.addToCart(productData);
-        setSnackbarOpen(true); // Open Snackbar when item is added to cart
+    const handleAddToCart = async () => {
+        try {
+            const userId = localStorage.getItem('UserId');
+            if (!userId) {
+                console.error('User not logged in');
+                return;
+            }
+
+            const cartItem = {
+                userId: userId,
+                productId: productData._id,
+                quantity: 1,
+            };
+
+            const response = await addToCart(cartItem);
+
+            if (response.success) {
+                context.addToCart(productData); 
+                setSnackbarOpen(true);
+            } else {
+                console.error("Failed to add item to cart:", response.message);
+            }
+        } catch (error) {
+            console.error("Error adding item to cart:", error);
+        }
     };
 
     const handleSnackbarClose = (event, reason) => {
@@ -72,7 +95,7 @@ const Product = (props) => {
                         <span className='d-block brand'>By <Link className='text-g'>{productData.brandId || 'Unknown Brand'}</Link></span>
                         <div className='d-flex align-items-center mt-3'>
                             <div className='d-flex align-items-center w-100'>
-                                <span className='price font-weight-bold'>Rs{productData.price || 'N/A'} </span>
+                                <span className='price font-weight-bold'>Rs{productData.newPrice || 'N/A'} </span>
                                 {productData.oldPrice && <span className='oldPrice'>Rs{productData.oldPrice}</span>}
                             </div>
                         </div>

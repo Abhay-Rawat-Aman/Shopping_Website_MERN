@@ -22,7 +22,11 @@ module.exports = {
 
     getAllProducts: async (req, res, next) => {
         try {
-            const products = await Product.find({});
+            const products = await Product.find({})
+                .populate('categoryId', 'name');
+                // .populate('brandId', 'brandName');
+
+
             return res.status(200).json(new ApiResponse(200, products, "Products retrieved successfully"));
         } catch (error) {
             return res.status(error.statusCode || 500).json(new ApiResponse(500, null, error.message || "Error retrieving products"));

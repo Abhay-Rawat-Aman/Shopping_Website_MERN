@@ -25,6 +25,7 @@ const productVariationSchema = new Schema({
 
 
 const productSchema = new Schema({
+
     categoryId: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -35,6 +36,14 @@ const productSchema = new Schema({
         required: true,
         ref: 'Brand'
     },
+    // categoryId: {
+    //     type: String,
+    //     required: true,
+    // },
+    // brandId: {
+    //     type: String,
+    //     required: true,
+    // },
     name: {
         type: String,
         required: true,

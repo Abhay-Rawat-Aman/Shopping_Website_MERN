@@ -19,8 +19,15 @@ import {
   Paper,
   IconButton,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoIcon from "@mui/icons-material/Info";
-import { createProduct } from "../../Api/authApi";
+import {
+  createProduct,
+  createCategory,
+  createBrand,
+  getCategories,
+  getBrands,
+} from "../../Api/authApi";
 
 const CreateProducts = () => {
   const [formData, setFormData] = useState({
@@ -31,10 +38,10 @@ const CreateProducts = () => {
     discount: "",
     total: "",
     sales: "0",
-    categoryId: "60d5f485f5f6b3e7b4a4e7c3",
+    categoryId: "",
     subCategory: "",
     stock: "",
-    brandId: "60d5f4a3f5f6b3e7b4a4e7c4",
+    brandId: "",
     weight: "",
     dimensions: "",
     image: null,
@@ -47,46 +54,102 @@ const CreateProducts = () => {
   const [variations, setVariations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [isBrandOpen, setIsBrandOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleBrandSelect = (brandId) => {
+    setFormData({
+      ...formData,
+      brandId,
+    });
+    setIsBrandOpen(false);
+  };
+
+  const handleSelect = (categoryId) => {
+    setFormData({ ...formData, categoryId });
+    setIsOpen(false);
+  };
+
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await getCategories();
+  //       if (response.success) {
+  //         setCategories(response.data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching categories:", error);
+  //     }
+  //   };
+  //   fetchCategories();
+  // }, []);
+
+  useEffect(() => {
+    const fetchCategoriesAndBrands = async () => {
+      try {
+        const categoryResponse = await getCategories();
+        const brandResponse = await getBrands();
+
+        if (categoryResponse.success) {
+          setCategories(categoryResponse.data);
+        }
+
+        if (brandResponse.success) {
+          setBrands(brandResponse.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error.message);
+      }
+    };
+
+    fetchCategoriesAndBrands();
+  }, []);
 
   const handleCreateProduct = async () => {
     setIsLoading(true);
     setError(null);
 
-     const formattedVariations = variations.map((variant, index) => ({
-       _id: index + 1,
-       additional_price: parseFloat(variant.additional_price) || 0,
-       stock: parseInt(variant.stock, 10) || 0,
-       details: [
-         {
-           variation_value_id:
-             variant.details?.[0]?.variation_value_id || index + 1,
-         },
-       ],
-     }));
-
-
-    const productData = {
-      ...formData,
-      oldPrice: parseFloat(formData.oldPrice),
-      newPrice: parseFloat(formData.newPrice),
-      discount: formData.discount,
-      stock: parseInt(formData.stock, 10),
-      rating: parseFloat(formData.rating),
-      image: formData.image ? URL.createObjectURL(formData.image) : null,
-      mainImage: formData.mainImage
-        ? URL.createObjectURL(formData.mainImage)
-        : null,
-      variations : formattedVariations,
-    };
-
-    console.log(productData);
+    const formattedVariations = variations.map((variant, index) => ({
+      _id: index + 1,
+      additional_price: parseFloat(variant.additional_price) || 0,
+      stock: parseInt(variant.stock, 10) || 0,
+      details: [
+        {
+          variation_value_id:
+            variant.details?.[0]?.variation_value_id || index + 1,
+        },
+      ],
+    }));
 
     try {
+      const productData = {
+        ...formData,
+        categoryId: formData.categoryId,
+        brandId: formData.brandId,
+        oldPrice: parseFloat(formData.oldPrice),
+        newPrice: parseFloat(formData.newPrice),
+        discount: formData.discount,
+        stock: parseInt(formData.stock, 10),
+        rating: parseFloat(formData.rating),
+        image: formData.image ? URL.createObjectURL(formData.image) : null,
+        mainImage: formData.mainImage
+          ? URL.createObjectURL(formData.mainImage)
+          : null,
+        variations: formattedVariations,
+      };
+
+      console.log("Creating product with data:", productData);
       const result = await createProduct(productData);
       console.log("Product created successfully:", result);
     } catch (err) {
-      console.error("Error creating product:", err.message);
-      setError(err.message);
+      console.error("Error in product creation process:", err);
+      setError(
+        err.message || "An error occurred during the product creation process"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -108,11 +171,11 @@ const CreateProducts = () => {
     if (colors.length && sizes.length) {
       const newVariants = colors.flatMap((color, colorIndex) =>
         sizes.map((size, sizeIndex) => ({
-          id: `${color}_${size}`, 
+          id: `${color}_${size}`,
           color,
           size,
-          additional_price: "", 
-          stock: "", 
+          additional_price: "",
+          stock: "",
           details: [
             {
               variation_value_id: colorIndex * sizes.length + sizeIndex + 1,
@@ -125,7 +188,6 @@ const CreateProducts = () => {
       setVariations([]);
     }
   };
-
 
   const handlePriceChange = (id, price) => {
     setVariations((prev) =>
@@ -143,65 +205,62 @@ const CreateProducts = () => {
     );
   };
 
-
-
   const deleteVariant = (id) => {
     setVariations((prev) => prev.filter((variant) => variant.id !== id));
   };
 
   const calculatePrices = (oldPrice, newPrice) => {
-    const old = parseFloat(oldPrice);
-    const new_ = parseFloat(newPrice);
-    if (isNaN(old) || isNaN(new_)) return { discount: "0.00", total: "0.00" };
+    if (isNaN(oldPrice) || isNaN(newPrice))
+      return { discount: "0.00", total: "0.00" };
 
-    const discount = old > 0 ? (((old - new_) / old) * 100).toFixed(2) : "0.00";
-    const total = new_.toFixed(2);
+    const discount =
+      oldPrice > 0
+        ? (((oldPrice - newPrice) / oldPrice) * 100).toFixed(2)
+        : "0.00";
+    const total = newPrice.toFixed(2);
 
     return { discount, total };
   };
 
-  const [subCategories, setSubCategories] = useState([]);
-
-  const categoryMap = {
-    electronics: ["Smartphones", "Laptops", "Accessories"],
-    clothing: ["Men's Wear", "Women's Wear", "Children's Wear"],
-    books: ["Fiction", "Non-fiction", "Educational"],
-    home: ["Furniture", "Decor", "Kitchen"],
-  };
-
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+    let newValue = files ? files[0] : value;
 
-    setFormData((prevState) => {
-      let newValue = files ? files[0] : value;
-
-      if (name === "oldPrice" || name === "newPrice") {
-        const oldPrice = name === "oldPrice" ? value : prevState.oldPrice;
-        const newPrice = name === "newPrice" ? value : prevState.newPrice;
-
-        const { discount, total } = calculatePrices(
-          parseFloat(oldPrice) || 0,
-          parseFloat(newPrice) || 0
-        );
-        newValue = value;
-        return {
-          ...prevState,
-          [name]: newValue,
-          discount,
-          total,
-        };
-      }
-
-      if (name === "categoryId") {
-        newValue = value;
-        setSubCategories(categoryMap[newValue] || []);
-      }
-
-      return {
+    if (name === "categoryId") {
+      setFormData((prevState) => ({
         ...prevState,
         [name]: newValue,
-      };
-    });
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: newValue,
+      }));
+    }
+
+    // Handle price changes separately to update discount and total
+    if (name === "oldPrice" || name === "newPrice") {
+      const oldPrice = name === "oldPrice" ? value : formData.oldPrice;
+      const newPrice = name === "newPrice" ? value : formData.newPrice;
+
+      const { discount, total } = calculatePrices(
+        parseFloat(oldPrice) || 0,
+        parseFloat(newPrice) || 0
+      );
+
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: newValue,
+        discount,
+        total,
+      }));
+      return;
+    }
+
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: newValue,
+    }));
   };
 
   useEffect(() => {
@@ -253,23 +312,79 @@ const CreateProducts = () => {
                 </Typography>
 
                 <div className="space-y-4">
-                  <div>
+                  <div className="relative">
                     <label
-                      htmlFor="name"
+                      htmlFor="categoryId"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Product Name
+                      Category
                     </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
+                    <div
+                      onClick={() => setIsOpen(!isOpen)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer bg-white flex justify-between items-center"
+                    >
+                      <span>
+                        {formData.categoryId
+                          ? categories.find(
+                              (cat) => cat._id === formData.categoryId
+                            )?.name || "Select a category"
+                          : "Select a category"}
+                      </span>
+
+                      <ExpandMoreIcon
+                        className={`transform transition-transform ${
+                          isOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </div>
+
+                    {isOpen && (
+                      <div
+                        className="absolute z-10 w-full mt-2 max-h-40 overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg"
+                        style={{ maxHeight: "10rem" }}
+                      >
+                        {categories.map((category) => (
+                          <div
+                            key={category._id}
+                            onClick={() => handleSelect(category._id)}
+                            className={`px-4 py-2 hover:bg-blue-500 hover:text-white cursor-pointer ${
+                              formData.categoryId === category._id
+                                ? "bg-blue-100"
+                                : ""
+                            }`}
+                          >
+                            {category.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* <div>
+                    <label
+                      htmlFor="subCategory"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Sub Category
+                    </label>
+                    <select
+                      id="subCategory"
+                      name="subCategory"
+                      value={formData.subCategory}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
-                    />
-                  </div>
+                    >
+                      <option value="" disabled>
+                        Select a sub-category
+                      </option>
+                      {subCategories.map((subCategory) => (
+                        <option key={subCategory} value={subCategory}>
+                          {subCategory}
+                        </option>
+                      ))}
+                    </select>
+                  </div> */}
 
                   <div>
                     <label
@@ -289,23 +404,48 @@ const CreateProducts = () => {
                     ></textarea>
                   </div>
 
-                  <div>
+                  <div className="relative">
                     <label
                       htmlFor="brandId"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Brand ID
+                      Brand
                     </label>
-                    <input
-                      type="text"
-                      id="brandId"
-                      disabled
-                      name="brandId"
-                      value={formData.brandId}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      required
-                    />
+                    <div
+                      onClick={() => setIsBrandOpen(!isBrandOpen)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg cursor-pointer bg-white flex justify-between items-center"
+                    >
+                      <span>
+                        {brands.find((brand) => brand._id === formData.brandId)
+                          ?.brandName  || "Select a brand"}
+                      </span>
+                      <ExpandMoreIcon
+                        className={`transform transition-transform ${
+                          isBrandOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </div>
+                    {isBrandOpen && (
+                      <div
+                        className="absolute z-10 w-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg"
+                        style={{ maxHeight: "10rem", overflowY: "auto" }}
+                      >
+                        {brands.map((brand) => (
+                          <div
+                            key={brand._id}
+                            onClick={() => handleBrandSelect(brand._id)}
+                            className={`px-4 py-2 cursor-pointer hover:bg-blue-500 text-black ${
+                              formData.brandId === brand._id
+                                ? "bg-blue-100"
+                                : ""
+                            }`}
+                          >
+                            {brand.brandName}{" "}
+                            {/* Ensure consistency with the property name */}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               </Box>
@@ -318,6 +458,24 @@ const CreateProducts = () => {
                 </Typography>
 
                 <div className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Product Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+
                   <div>
                     <label
                       htmlFor="stock"
@@ -500,58 +658,6 @@ const CreateProducts = () => {
                 </Typography>
 
                 <div className="space-y-4">
-                  <div>
-                    <label
-                      htmlFor="categoryId"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Category
-                    </label>
-                    <select
-                      id="categoryId"
-                      name="category"
-                      value={formData.categoryId}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      required
-                    >
-                      <option value="" disabled>
-                        Select a category
-                      </option>
-                      {Object.keys(categoryMap).map((key) => (
-                        <option key={key} value={key}>
-                          {key}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="subCategory"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Sub Category
-                    </label>
-                    <select
-                      id="subCategory"
-                      name="subCategory"
-                      value={formData.subCategory}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      required
-                    >
-                      <option value="" disabled>
-                        Select a sub-category
-                      </option>
-                      {subCategories.map((subCategory) => (
-                        <option key={subCategory} value={subCategory}>
-                          {subCategory}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
                   <div>
                     <label
                       htmlFor="colors"

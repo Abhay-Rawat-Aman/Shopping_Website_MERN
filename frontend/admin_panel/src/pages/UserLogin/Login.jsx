@@ -14,8 +14,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState({
-    email: "",
-    password: "",
+    email: "userNew@gmail.com",
+    password: "123456789",
     agreeTerm: false,
   });
 
@@ -134,6 +134,7 @@ const Login = () => {
 
         <br />
         <h4 className="text-center text-sm font-bold">Or Sign up with Email</h4>
+        <p className=" text-red-500 text-center text-sm font-bold"> Just Accept the Terms and policies and hit the sign up button</p>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 

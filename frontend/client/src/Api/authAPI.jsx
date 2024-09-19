@@ -54,3 +54,75 @@ export const LoginUser = async (userData) => {
     throw error.response ? error.response.data : new Error("Network Error");
   }
 };
+
+export const addToCart = async (items) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/addToCart`, items, {
+            withCredentials: true,
+        });
+        return { success: true, data: response.data };
+    } catch (error) {
+        console.error("Error adding to cart:", error);
+        return { success: false, message: error.response?.data?.message || "Error adding item to cart" };
+    }
+};
+
+export const removeFromCart = async (userId, productId) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/removeFromCart`,
+      { userId, productId },
+      {
+        withCredentials: true,
+      }
+    );
+    return { success: true, message: response.data.message };
+  } catch (error) {
+    console.error("Error removing from cart:", error);
+    return {
+      success: false,
+      message: error.response?.data?.message || "Error removing item from cart",
+    };
+  }
+};
+
+export const getDataFromCart = async (userId) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/getDataFromCart`,
+      { userId },
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching cart data:", error);
+    throw error.response ? error.response.data : new Error("Network Error");
+  }
+};
+
+export const getCategories = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/getCategories`, {
+      withCredentials: true,
+    });
+    // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching cart data:", error);
+    throw error.response ? error.response.data : new Error("Network Error");
+  }
+};
+
+export const getProductByCategoryId = async (id) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/getProductByCategory/${id}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching products by category ID:", error);
+    throw error.response ? error.response.data : new Error("Network Error");
+  }
+};

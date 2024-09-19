@@ -180,7 +180,9 @@ body {
 }
 
 .content_Right {
-    padding: 1rem 1.8rem !important;
+    padding: 1rem 1.1rem !important;
+    flex-grow: 1;
+    overflow-y: hidden;
 }
 
 header {
@@ -651,6 +653,12 @@ input[type=numberr] {
     color: #3872fa !important;
 }
 
-.submitBtn{
+.submitBtn {
     background-color: #111 !important;
+}
+
+.scrollable-select {
+    max-height: 150px;
+    overflow-y: auto;
+    display: block;
 }

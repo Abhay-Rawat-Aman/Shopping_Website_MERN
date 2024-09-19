@@ -118,8 +118,8 @@ function App() {
 
           <Routes>
             <Route exact path="/" element={<Home data={productData} />} />
-            <Route exact path="/cat/:id" element={<Listing data={productData} single={true} />} />
-            <Route exact path="/cat/:id/:id" element={<Listing data={productData} single={false} />} />
+            <Route exact path="/cat/:id" element={<Listing single={true} />} />
+            <Route exact path="/cat/:id/:subId" element={<Listing single={false} />} />
             <Route path="/product/:productId" element={<ProductDetails />} />
             <Route exact path="/cart" element={<Cart />} />
             <Route exact path="/signIn" element={<SignIn />} />

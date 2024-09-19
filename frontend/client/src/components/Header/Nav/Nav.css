@@ -6,74 +6,95 @@
     margin: auto;
     border-top: 1px solid rgba(0, 0, 0, 0.25);
     border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+    font-family: 'Rubik', sans-serif;
+    display: flex;
+    align-items: center;
 }
 
-.part1{
-    width: max-content;
+.container {
+    width: 100%;
 }
 
-.nav .catTab {
-    width: max-content;
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.part1 {
+    flex: 1;
+    zoom: 82%;
+}
+
+.catTab {
+    background-color: #3bb77e;
+    /* Material UI Button background color */
+    color: #fff;
+    /* Text color for button */
     padding: 8px 15px !important;
     font-size: 15px !important;
     white-space: nowrap;
     text-transform: capitalize !important;
+    display: flex;
+    align-items: center;
 }
 
-.nav nav ul li {
+.catTab svg {
+    font-size: 20px;
+    /* Icon size */
+    margin-right: 5px;
+}
+
+.slider-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    width: 100%;
     position: relative;
 }
 
-.nav nav ul li button {
-    text-transform: capitalize;
-    padding: 27px 12px;
-    color: #3bb77e;
+.slider-container::-webkit-scrollbar {
+    display: none;
 }
 
-.nav nav ul li button a {
+.slider-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.list-inline {
+    display: inline-flex;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.list-inline-item {
+    margin-right: 15px;
+}
+
+.list-inline-item a {
     text-decoration: none;
     color: rgba(0, 0, 0, 0.866);
     font-size: 15px;
 }
 
-.part3{
-    margin: auto !important;;
+.list-inline-item button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
 }
 
-.nav .part3 .phoneNum {
-    margin-left: auto;
-}
-
-.nav .part3 .phoneNum span svg {
-    font-size: 30px !important;
-    margin-right: 5px;
-    opacity: .8;
-}
-
-.nav .part3 .phoneNum h3 {
-    font-size: 25px !important;
-    line-height: 25px !important;
-}
-
-.nav .part3 .phoneNum p {
-    font-size: 12px !important;
-    opacity: .6;
-}
-
-.nav nav .dropdown_menu button {
-    padding: 10px 5px;
-}
-
-.nav nav .dropdown_menu {
+.dropdown_menu {
     position: absolute;
     top: 100%;
     left: 0;
     width: 210px;
-    height: auto;
     background-color: #fff;
     box-shadow: 6px 7px 18px 8px rgba(0, 0, 0, 0.6);
-    -webkit-box-shadow: 6px 7px 18px 8px rgba(0, 0, 0, 0.6);
-    -moz-box-shadow: 6px 7px 18px 8px rgba(0, 0, 0, 0.6);
     padding: 0px 5px;
     z-index: 100;
     opacity: 0;
@@ -81,70 +102,135 @@
     transition: all .2s ease-in-out;
 }
 
-.nav nav .dropdown_menu ul {
+.dropdown_menu ul {
     padding: 0px;
+    margin: 0;
+    list-style: none;
 }
 
-.nav nav .dropdown_menu li {
+.dropdown_menu li {
     width: 100% !important;
-    list-style: none;
-    /* padding: 0px; */
     margin: 0 !important;
 }
 
-.nav nav .dropdown_menu button {
+.dropdown_menu button {
     width: 100% !important;
     text-align: left !important;
-    justify-content: flex-start !important;
     padding: 12px 10px;
     text-transform: capitalize !important;
     color: #2b9f69;
-    ;
 }
 
-.nav nav .dropdown_menu button a {
+.dropdown_menu button a {
     font-weight: 400;
-    font-family: "Rubik", sans-serif;
-    font-optical-sizing: auto;
     color: rgba(0, 0, 0, 0.5);
 }
 
-.nav nav li:hover .dropdown_menu {
+.list-inline-item:hover .dropdown_menu {
     opacity: 1;
-    visibility: inherit;
+    visibility: visible;
     top: 110%;
 }
 
-.mega-menu {
-    height: auto !important;
-    background-color: #2b9f69;
-    padding: 30px 45px !important;
-    z-index: 9999 !important;
+.phoneNum {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
 }
 
-.mega-menu .col-3 ul li {
-    margin-bottom: 10px !important;
-    display: block !important;
+.phoneNum span {
+    font-size: 30px;
+    margin-right: 5px;
+    opacity: 0.8;
 }
 
-.mega-menu .col-3 ul li a {
-    color: rgba(0, 0, 0, 0.8);
-    font-size: 17px;
-    text-decoration: none;
+.phoneNum h3 {
+    font-size: 25px;
+    line-height: 25px;
+    margin-bottom: 0;
 }
 
-.mega-menu .col-3 img {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-
-    height: 200px !important;
-    object-fit: contain !important;
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+.phoneNum p {
+    font-size: 12px;
+    opacity: 0.6;
 }
 
-.mega-menu .col-3.images {
-    height: 200px !important;
+/* Responsive Styles */
+@media (max-width: 767px) {
+    .nav {
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .part1, .phoneNum {
+        width: 100%;
+    }
+
+    .part1{
+        display: none !important;
+    }
+
+    .catTab {
+        font-size: 14px !important;
+        padding: 6px 12px !important;
+    }
+
+    .phoneNum {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .phoneNum h3 {
+        font-size: 20px !important;
+    }
+
+    .phoneNum p {
+        font-size: 10px !important;
+    }
+
+    .slider-container {
+        flex-direction: column;
+        overflow-x: auto;
+    }
+
+    .dropdown_menu {
+        display: block;
+        position: relative;
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        margin-top: 10px;
+    }
+
+    .dropdown_menu ul {
+        padding: 0;
+        margin: 0;
+    }
+
+    .dropdown_menu ul li {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .dropdown_menu ul li:last-child {
+        border-bottom: none;
+    }
+
+    .list-inline-item {
+        display: block;
+        text-align: center;
+        margin-right: 0;
+    }
 }
 
+@media (max-width: 1200px) {
+    .part1{
+        display: none !important;
+    }
+    .dropdown_menu {
+        display: none;
+    }
+
+    .list-inline-item:hover .dropdown_menu {
+        display: block;
+    }
+}

@@ -1,14 +1,54 @@
-.bannerSection{
+.bannerSection {
     padding: 35px 0px;
 }
 
-.bannerSection .box{
+.bannerSection .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.bannerSection .col {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+    padding: 0 15px;
+    margin-bottom: 30px;
+}
+
+.bannerSection .box {
     overflow: hidden;
     border-radius: 12px;
     cursor: pointer;
 }
 
-.bannerSection .box:hover img{
+.bannerSection .box img {
+    width: 100%;
+    height: auto;
     transition: all .2s ease-in-out;
+}
+
+.bannerSection .box:hover img {
     transform: scale(1.1);
+}
+
+@media (max-width: 992px) {
+    /* ... (previous styles remain the same) ... */
+
+    .bannerSection .col {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    /* ... (previous styles remain the same) ... */
+
+    .slider-container {
+        display: none;
+    }
+
+    .bannerSection .col {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }

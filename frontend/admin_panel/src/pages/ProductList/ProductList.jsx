@@ -13,12 +13,12 @@ import { IoMdAdd } from "react-icons/io";
 import { FaCartShopping } from "react-icons/fa6";
 import InfoIcon from "@mui/icons-material/Info";
 import CircularProgress from "@mui/material/CircularProgress";
-import { getAllProduct, deleteProduct } from "../../Api/authApi";
+import { getAllProduct, deleteProduct , } from "../../Api/authApi";
 import Model from "../../components/Model/model";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState(null);
 
@@ -27,8 +27,11 @@ const ProductList = () => {
       try {
         const data = await getAllProduct();
         setProducts(data);
+        console.log(data)
       } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -43,6 +46,7 @@ const ProductList = () => {
     setProductIdToDelete(id);
     setShowModal(true);
   };
+
 
   const handleConfirmDelete = async () => {
     if (productIdToDelete) {
@@ -113,7 +117,10 @@ const ProductList = () => {
               <CircularProgress color="secondary" size={100} />
             </div>
           ) : products.length > 0 ? (
-            <table className="min-w-full divide-y divide-gray-200 table-auto min-h-[500px]">
+            <table
+              className="min-w-full divide-y divide-gray-200 table-auto min-h-[500px]"
+              style={{ zoom: "85%" }}
+            >
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
@@ -152,7 +159,7 @@ const ProductList = () => {
                       <div className="flex items-center gap-2">
                         <div className="w-16 h-16 bg-gray-200 overflow-hidden rounded">
                           <img
-                            src={product.image}
+                            src={product.mainImage}
                             alt={product.name}
                             className="object-cover w-full h-full"
                           />
@@ -165,7 +172,7 @@ const ProductList = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-950 font-semibold">
-                      {product.subCategory}
+                      {product.categoryId ? product.categoryId.name : "Unknown"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <div>
