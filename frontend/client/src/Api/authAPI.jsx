@@ -126,3 +126,51 @@ export const getProductByCategoryId = async (id) => {
     throw error.response ? error.response.data : new Error("Network Error");
   }
 };
+
+export const createOrder = async (productId, quantity) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/createOrder`,
+      { productId, quantity },
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error creating order:", error);
+    throw error.response ? error.response.data : new Error("Network Error");
+  }
+};
+
+export const verifyPayment = async (
+  razorpay_order_id,
+  razorpay_payment_id,
+  razorpay_signature
+) => {
+  try {
+    console.log("Sending payment verification data:", {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+    });
+
+    const response = await axios.post(
+      `${BASE_URL}/verifyPayment`,
+      {
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    console.log("Verification response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error verifying payment:", error);
+    console.error("Error response:", error.response?.data);
+    throw error.response ? error.response.data : new Error("Network Error");
+  }
+};

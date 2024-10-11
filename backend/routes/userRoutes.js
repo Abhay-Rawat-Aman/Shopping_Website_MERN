@@ -1,5 +1,6 @@
 const express = require('express');
 const { registerUser, fetchUser, logoutUser, refreshAccessToken, fetchUsername, addAddress, updateAddress, deleteAddress, addToWishlist, removeFromWishlist, addToCart, removeFromCart, getDataFromCart } = require('../controller/userController');
+const { createOrder, verifyPayment } = require('../controller/priceController'); // Updated imports
 const { verifyJwt } = require('../middleware/userAuth.middleware');
 const { createProduct, getAllProducts, getProductById, updateProduct, deleteProduct, createVariationType, createVariationValue, getProductByCategory, getProductByBrandId } = require('../controller/productController');
 const { createCategory, getCategories, getCategoryById, getCategoryByName } = require('../controller/categoryController');
@@ -14,18 +15,17 @@ router.get('/admin/userName/:id', fetchUsername);
 router.route("/admin/logout").post(verifyJwt, logoutUser);
 router.route("/admin/refresh-Token").post(refreshAccessToken);
 
-// adress 
+// Address routes
 router.route("/admin/addAddress").post(addAddress);
 router.route("/admin/updateAddress/:id").put(updateAddress);
 router.route("/admin/deleteAddress/:id").delete(deleteAddress);
 
+// Wishlist routes
+router.route("/admin/addToWishlist").post(addToWishlist);
+router.route("/admin/removeFromWishlist").post(removeFromWishlist);
 
-// wishlist
-router.route("/admin/addToWishlist").post(addToWishlist)
-router.route("/admin/removeFromWishlist").post(removeFromWishlist)
-
-// cart
-router.route("/admin/addToCart").post(addToCart)
+// Cart routes
+router.route("/admin/addToCart").post(addToCart);
 router.route("/admin/removeFromCart").post(removeFromCart);
 router.route("/admin/getDataFromCart").post(getDataFromCart);
 
@@ -45,6 +45,10 @@ router.route("/admin/getAllProducts").get(getAllProducts);
 router.route("/admin/getProductById/:id").get(getProductById);
 router.route("/admin/updateProduct/:id").put(updateProduct);
 router.route("/admin/deleteProduct/:id").delete(deleteProduct);
+
+// Payment routes
+router.route("/admin/createOrder").post(createOrder);  
+router.route("/admin/verifyPayment").post(verifyPayment); 
 
 // Variation routes
 router.route("/admin/createVariationType").post(createVariationType);

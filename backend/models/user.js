@@ -38,6 +38,10 @@ const userScheme = new Schema({
         required: false,
         trim: true,
     },
+    phoneNumber: {
+        type: String,
+        required: true,
+    },
     password: {
         type: String,
         required: [true, "Pasword is required"]

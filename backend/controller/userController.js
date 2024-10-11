@@ -24,30 +24,41 @@ const generateAccessAndRefreshToken = async (userId) => {
 
 exports.registerUser = async (req, res) => {
     try {
-        const { fname, lname, email, password } = req.body;
+        const { fname, lname, email, password, phoneNumber } = req.body;
 
-        if ([fname, lname, email].some((field) => field?.trim() === "")) {
+        // Check if all required fields are provided and non-empty
+        if ([fname, lname, email, phoneNumber].some((field) => field?.trim() === "")) {
             throw new ApiErrorHandler(400, "All fields must be filled");
         }
 
+        // Validate phone number format
+        const phoneNumberRegex = /^[0-9]{10,15}$/;
+        if (!phoneNumberRegex.test(phoneNumber)) {
+            throw new ApiErrorHandler(400, "Invalid phone number format");
+        }
+
+        // Check if user with the same email or fname already exists
         const existedUser = await User.findOne({ $or: [{ email }, { fname }] });
         if (existedUser) {
             throw new ApiErrorHandler(400, "User already exists");
         }
 
-        const user = await User.create({ fname, lname, email, password });
+        // Create the new user
+        const user = await User.create({ fname, lname, email, password, phoneNumber });
         const createdUser = await User.findById(user._id).select("-__v");
 
         if (!createdUser) {
             throw new ApiErrorHandler(500, "Something went wrong while registering user");
         }
 
+        // Return success response
         return res.status(201).json({
             success: true,
             message: "User registered successfully",
             user: createdUser
         });
     } catch (error) {
+        // Return error response
         return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message || "Internal server error"
@@ -88,7 +99,7 @@ exports.fetchUser = async (req, res) => {
             .cookie("refresh_token", refreshToken, options)
             .json(new ApiResponse(
                 200,
-                { fname: loggedInUser.fname, lname: loggedInUser.lname, email: loggedInUser.email , id:loggedInUser._id },
+                { fname: loggedInUser.fname, lname: loggedInUser.lname, email: loggedInUser.email , phone : loggedInUser.phoneNumber , id:loggedInUser._id },
                 "User logged in successfully"
             ));
     } catch (error) {

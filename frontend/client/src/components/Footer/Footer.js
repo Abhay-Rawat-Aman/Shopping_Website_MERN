@@ -122,7 +122,7 @@ const Footer = () => {
                             <div className='row'>
                                 <div className='col'>
                                     <h3>Company</h3>
-                                    <ul class="footer-list mb-sm-5 mb-md-0">
+                                    <ul className="footer-list mb-sm-5 mb-md-0">
                                         <li><Link to="">About Us</Link></li>
                                         <li><Link to="">Delivery Information</Link></li>
                                         <li><Link to="">Privacy Policy</Link></li>
@@ -134,7 +134,7 @@ const Footer = () => {
                                 </div>
                                 <div className='col'>
                                     <h3>Account</h3>
-                                    <ul class="footer-list mb-sm-5 mb-md-0">
+                                    <ul className="footer-list mb-sm-5 mb-md-0">
                                         <li><Link to="#">Sign In</Link> </li>
                                         <li><Link to="#">View Cart</Link></li>
                                         <li><Link to="#">My Wishlist</Link></li>
@@ -146,7 +146,7 @@ const Footer = () => {
                                 </div>
                                 <div className='col'>
                                     <h3>Corporate</h3>
-                                    <ul class="footer-list mb-sm-5 mb-md-0">
+                                    <ul className="footer-list mb-sm-5 mb-md-0">
                                         <li><Link to="#">Become a Vendor</Link></li>
                                         <li><Link to="#">Affiliate Program</Link></li>
                                         <li><Link to="#">Farm Business</Link></li>
@@ -158,7 +158,7 @@ const Footer = () => {
                                 </div>
                                 <div className='col'>
                                     <h3>Popular</h3>
-                                    <ul class="footer-list mb-sm-5 mb-md-0">
+                                    <ul className="footer-list mb-sm-5 mb-md-0">
                                         <li><Link to="#">Milk &amp; Flavoured Milk</Link></li>
                                         <li><Link to="#">Butter and Margarine</Link></li>
                                         <li><Link to="#">Eggs Substitutes</Link></li>

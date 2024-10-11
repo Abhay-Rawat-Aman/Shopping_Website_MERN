@@ -7,7 +7,6 @@
     transition: all 0.25s ease-in-out;
     position: relative;
     background-color: #fff;
-    /* Added for better visibility */
 }
 
 .productThumb:hover {
@@ -17,18 +16,14 @@
 .productThumb .badge {
     position: absolute;
     top: 10px;
-    /* Adjusted from 0 for better visibility */
     left: 10px;
-    /* Adjusted from 0 for better visibility */
     display: inline-block !important;
     background-color: rebeccapurple;
     padding: 8px 12px;
-    /* Adjusted padding for better spacing */
     font-size: 14px;
     z-index: 10;
     color: #fff;
     border-radius: 10px;
-    /* Adjusted for rounded corners */
     text-transform: capitalize;
 }
 
@@ -53,7 +48,6 @@
     position: relative;
     overflow: hidden;
     border-radius: 10px;
-    /* Rounded corners for image container */
 }
 
 .productThumb .discount {
@@ -62,19 +56,12 @@
     left: 10px;
     background-color: #f74b81;
     color: #fff;
-    /* White text color */
     padding: 5px 10px;
-    /* Padding around the text */
     border-radius: 5px;
-    /* Rounded corners */
     font-size: 16px;
-    /* Font size of the discount */
     font-weight: bold;
-    /* Make the text bold */
     text-transform: uppercase;
-    /* Uppercase text */
     z-index: 10;
-    /* Ensure the discount is above other elements */
 }
 
 .productThumb .imageWrapper .wrapper {
@@ -103,12 +90,10 @@
 
 .productThumb .title {
     margin: 10px 0;
-    /* Increased margin for better spacing */
 }
 
 .productThumb .title a {
     line-height: 1.2;
-    /* Adjusted for better text spacing */
     color: #000;
     font-weight: 500;
     font-size: 18px;
@@ -156,13 +141,10 @@
     font-weight: 700;
     color: #3bb77e;
     padding: 10px 20px;
-    /* Adjusted padding for better button appearance */
     background-color: #cae5d8;
     text-transform: capitalize !important;
     margin: 5px 0;
-    /* Margin for spacing between buttons */
     border-radius: 5px;
-    /* Rounded corners for buttons */
 }
 
 .productThumb button svg {
@@ -177,40 +159,30 @@
 
 .productThumb .info .buttonContainer {
     display: flex;
-    /* Use flexbox to align buttons horizontally */
     gap: 10px;
-    /* Space between buttons */
     margin-top: 15px;
-    /* Space above the button container */
     width: 100%;
 }
 
 .productThumb .info .buttonContainer button {
     flex: 1;
-    /* Make buttons take equal width */
     font-size: 15px !important;
     font-weight: 700;
     color: #fff;
     padding: 10px;
-    /* Adjust padding for better button appearance */
     text-transform: capitalize !important;
     border-radius: 5px;
-    /* Rounded corners for buttons */
 }
 
 .productThumb .info .buttonContainer .addToCartButton {
     background-color: #3bb77e;
-    /* Green color for 'Add to cart' */
     color: #fff;
-    font-size: 12px;
-    /* White text color */
+    font-size: 12px !important;
 }
 
 .productThumb .info .buttonContainer .buyNowButton {
     background-color: #f74b81;
-    /* Pink color for 'Buy Now' */
     color: #fff;
-    /* White text color */
 }
 
 .productThumb .info .buttonContainer button:hover {

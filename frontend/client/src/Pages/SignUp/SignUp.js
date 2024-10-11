@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../SignUp/SignUp.css';
 import TextField from '@mui/material/TextField';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
@@ -7,9 +7,10 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import { Button } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import { signUpUser, LoginUser } from '../../Api/authAPI'; // Import your API function
+import { signUpUser } from '../../Api/authAPI';
 
 const SignUp = () => {
+    const navigate = useNavigate();
     const [showPass, setShowPass] = useState(false);
     const [showPass1, setShowPass1] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
@@ -19,8 +20,11 @@ const SignUp = () => {
         lname: '',
         email: '',
         password: '',
+        phoneNumber: '',
+        confirmPassword: '',
         agreeTerm: false,
     });
+
 
     const handleFormChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -31,7 +35,7 @@ const SignUp = () => {
     };
 
     const handleSignUp = async (e) => {
-        e.preventDefault(); // Prevent the default form submission
+        e.preventDefault();
 
         if (!userData.agreeTerm) {
             alert("You must agree to the terms and conditions.");
@@ -43,12 +47,14 @@ const SignUp = () => {
         try {
             const result = await signUpUser(userData);
             console.log('User signed up successfully:', result);
-            // Handle successful sign-up, e.g., reset form or redirect
+            navigate('/signIn');
             setUserData({
                 fname: '',
                 lname: '',
                 email: '',
                 password: '',
+                phoneNumber: '',
+                confirmPassword:'',
                 agreeTerm: false
             });
         } catch (error) {
@@ -135,6 +141,18 @@ const SignUp = () => {
                             </div>
 
                             <div className='form-group mb-4 w-100'>
+                                <TextField
+                                    id="PhoneNumber"
+                                    label="Phone Number"
+                                    type='number'
+                                    name='phoneNumber'
+                                    value={userData.phone}
+                                    onChange={handleFormChange}
+                                    className='w-100'
+                                />
+                            </div>
+
+                            <div className='form-group mb-4 w-100'>
                                 <div className='position-relative'>
                                     <TextField
                                         id="Password"
@@ -155,8 +173,8 @@ const SignUp = () => {
                                 <div className='position-relative'>
                                     <TextField
                                         id="Confirm_Password"
-                                        name='Confirm_pasword'
-                                        value={userData.Confirm_pasword}
+                                        name='confirmPassword' 
+                                        value={userData.confirmPassword}
                                         onChange={handleFormChange}
                                         label="Confirm Password"
                                         type={showPass1 ? 'text' : 'password'}
@@ -167,6 +185,7 @@ const SignUp = () => {
                                     </Button>
                                 </div>
                             </div>
+
 
                             <div className='form-group mb-4 w-100'>
                                 <label className='d-flex align-items-center'>

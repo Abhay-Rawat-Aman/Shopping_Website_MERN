@@ -1,26 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getProductById } from '../../Api/authAPI';
-import { Rating } from '@mui/material';
+import { getProductById, createOrder , verifyPayment } from '../../Api/authAPI';
+import { Alert, Rating } from '@mui/material';
 import InnerImageZoom from 'react-inner-image-zoom';
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ProductDetails.css';
 import { ShoppingCart } from '@mui/icons-material';
+import axios from 'axios';
+import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 
 const ProductDetails = () => {
     const { productId } = useParams();
     const [productData, setProductData] = useState(null);
-    const [inputValue, setInputValue] = useState(1);
+    const [quantity, setQuantity] = useState(1);
     const [activeAttributes, setActiveAttributes] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: '',
+        severity: 'info'
+    });
+
+    const showSnackbar = (message, severity = 'info') => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     useEffect(() => {
         const fetchProductData = async () => {
             try {
                 const data = await getProductById(productId);
                 setProductData(data);
+                const initialAttributes = {};
+                ['weight', 'RAM', 'SIZE'].forEach(attr => {
+                    if (data[attr] && data[attr].length > 0) {
+                        initialAttributes[attr] = 0;
+                    }
+                });
+                setActiveAttributes(initialAttributes);
             } catch (error) {
-                console.error('Error fetching product data:', error);
+                showSnackbar('Error fetching product data', 'error');
             }
         };
 
@@ -31,6 +57,20 @@ const ProductDetails = () => {
         window.scrollTo(0, 0);
     }, []);
 
+    useEffect(() => {
+        const loadScript = (src) => {
+            return new Promise((resolve) => {
+                const script = document.createElement("script");
+                script.src = src;
+                script.onload = () => resolve(true);
+                script.onerror = () => resolve(false);
+                document.body.appendChild(script);
+            });
+        };
+
+        loadScript("https://checkout.razorpay.com/v1/checkout.js");
+    }, []);
+
     const handleAttributeClick = (attr, index) => {
         setActiveAttributes((prev) => ({
             ...prev,
@@ -38,8 +78,62 @@ const ProductDetails = () => {
         }));
     };
 
-    const incrementQuantity = () => setInputValue((prev) => prev + 1);
-    const decrementQuantity = () => setInputValue((prev) => (prev > 1 ? prev - 1 : 1));
+    const incrementQuantity = () => setQuantity((prev) => prev + 1);
+    const decrementQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
+    const handleBuyNow = async () => {
+        if (!productData) return;
+
+        setLoading(true);
+
+        try {
+            const orderResponse = await createOrder(productId, quantity);
+
+            const { order } = orderResponse;
+
+            const options = {
+                key: "rzp_test_zR3Hw3haQMWYC9",
+                amount: order.amount,
+                currency: "INR",
+                name: "Nest Mart & Grocery",
+                description: `Purchase of ${productData.name}`,
+                order_id: order.id,
+                handler: async (response) => {
+                    try {
+                        const verificationResponse = await verifyPayment(
+                            response.razorpay_order_id,
+                            response.razorpay_payment_id,
+                            response.razorpay_signature
+                        );
+
+
+                        if (verificationResponse.success) {
+                            showSnackbar("Payment Successful! Thank you for your purchase.", "success");
+                        } else {
+                            showSnackbar("Payment verification failed. Please try again.", "error");
+                        }
+                    } catch (error) {
+                        showSnackbar("An error occurred during payment verification. Please try again.", "error");
+                    }
+                },
+                prefill: {
+                    name: "Pawan",
+                    email: "Pawan12@example.com",
+                    contact: "9999999999",
+                },
+                theme: {
+                    color: "#3399cc",
+                },
+            };
+
+            const paymentObject = new window.Razorpay(options);
+            paymentObject.open();
+        } catch (error) {
+            console.error("Payment error:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (!productData) {
         return (
@@ -88,6 +182,22 @@ const ProductDetails = () => {
                 </div>
             </nav>
 
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    severity={snackbar.severity}
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
+
             {/* Product Details */}
             <div className="container my-5">
                 <div className="row">
@@ -128,7 +238,7 @@ const ProductDetails = () => {
                                     <span className="rating-value">({productData.rating || 'N/A'})</span>
                                 </div>
                                 <div className="product-price">
-                                    <span className="current-price">Rs. {productData.price}</span>
+                                    <span className="current-price">Rs. {productData.newPrice}</span>
                                     {productData.discount && (
                                         <span className="price-info">
                                             <span className="discount">{productData.discount} Off</span>
@@ -172,7 +282,7 @@ const ProductDetails = () => {
                                         </button>
                                         <input
                                             type="text"
-                                            value={inputValue}
+                                            value={quantity}
                                             readOnly
                                             aria-label="Quantity"
                                         />
@@ -188,9 +298,13 @@ const ProductDetails = () => {
 
                                 {/* Action Buttons */}
                                 <div className="product-actions">
-                                    <button className="btn-add-to-cart">
+                                    <button
+                                        className="btn-add-to-cart"
+                                        onClick={handleBuyNow}
+                                        disabled={loading}
+                                    >
                                         <ShoppingCart style={{ marginRight: '8px' }} />
-                                        Buy Now
+                                        {loading ? 'Processing...' : 'Buy Now'}
                                     </button>
                                     <button className="btn-wishlist">Add to Wishlist</button>
                                 </div>
@@ -211,7 +325,6 @@ const ProductDetails = () => {
                                 <li><strong>Colors:</strong> {productData.colors}</li>
                                 <li><strong>Sizes:</strong> {productData.sizes}</li>
                             </ul>
-
                         </div>
                     </div>
                 </div>

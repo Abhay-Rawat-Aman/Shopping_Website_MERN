@@ -33,7 +33,7 @@ const SignIn = () => {
     };
 
     const handleSignIn = async (e) => {
-        e.preventDefault(); // Prevent the default form submission
+        e.preventDefault();
 
         if (!userData.agreeTerm) {
             alert("You must agree to the terms and conditions.");
@@ -41,15 +41,16 @@ const SignIn = () => {
         }
 
         setShowLoader(true);
+        console.log(userData);
 
         try {
             const result = await LoginUser(userData);
             console.log('User signed in successfully:', result);
-            // Handle successful sign-in, e.g., set user state, redirect
             localStorage.setItem('isLogin', true);
             localStorage.setItem("firstName", result.data.fname);
             localStorage.setItem("lastName", result.data.lname);
             localStorage.setItem("UserId", result.data.id);
+            localStorage.setItem("PhoneNumber", result.data.phone);
             context.signIn();
             navigate('/');
         } catch (error) {

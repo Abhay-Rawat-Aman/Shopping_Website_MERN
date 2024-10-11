@@ -14,7 +14,6 @@ const Nav = () => {
     const fetchCategories = async () => {
       try {
         const categories = await getCategories();
-        console.log(categories.data);
         setNavData(categories.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
